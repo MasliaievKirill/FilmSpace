@@ -111,5 +111,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLabelDescription" />
 
+    <TextView
+        android:id="@+id/textViewLabelAddToFavourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/AddToFavourite"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOverview" />
+
+    <ImageView
+        android:id="@+id/imageViewAddToFavourite"
+        android:layout_width="@dimen/size_add_delete_button"
+        android:layout_height="@dimen/size_add_delete_button"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/AddToFavourite"
+        android:onClick="onClickChangeFavourite"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewLabelAddToFavourite"
+        app:layout_constraintStart_toEndOf="@id/textViewLabelAddToFavourite"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabelAddToFavourite"
+        app:srcCompat="@drawable/favourite_add" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
