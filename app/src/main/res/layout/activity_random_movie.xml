@@ -4,19 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FavouriteActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFavouriteMovies"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewFavourite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".RandomMovieActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationViewFavourite"
+        android:id="@+id/bottomNavigationViewRandom"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/surface"

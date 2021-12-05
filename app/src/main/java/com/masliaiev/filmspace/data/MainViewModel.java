@@ -45,9 +45,6 @@ public class MainViewModel extends AndroidViewModel {
         return movies;
     }
 
-    public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
-        return favouriteMovies;
-    }
 
     private static class GetMovieTask extends AsyncTask <Integer, Void, Movie> {
         @Override
@@ -57,6 +54,10 @@ public class MainViewModel extends AndroidViewModel {
             }
             return null;
         }
+    }
+
+    public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
+        return favouriteMovies;
     }
 
     private static class GetFavouriteMovieTask extends AsyncTask <Integer, Void, FavouriteMovie> {
