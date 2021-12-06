@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -51,6 +52,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
 
+    private static String lang;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class DetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+        lang = Locale.getDefault().getLanguage();
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
@@ -96,8 +100,8 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewTrailers.setAdapter(trailerAdapter);
         recyclerViewReviews.setAdapter(reviewAdapter);
-        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId());
-        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId());
+        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId(), lang);
+        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId(), lang);
         ArrayList<Trailer> trailers = JSONUtils.getTrailersFromJSON(jsonObjectTrailers);
         ArrayList<Review> reviews = JSONUtils.getReviewsFromJSON(jsonObjectReviews);
         trailerAdapter.setTrailers(trailers);
