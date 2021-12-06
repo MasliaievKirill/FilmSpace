@@ -33,10 +33,6 @@ public class RandomMovieActivity extends AppCompatActivity implements SensorEven
     private BottomNavigationView bottomNavigationViewRandom;
     private MainViewModel viewModel;
 
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
-
     private SensorManager sensorManager;
 
     private static final float SHAKE_THRESHOLD = 3.25f;
@@ -72,6 +68,11 @@ public class RandomMovieActivity extends AppCompatActivity implements SensorEven
                         overridePendingTransition(0,0);
                         break;
                     case R.id.bottomRandom:
+                        break;
+                    case R.id.bottomSearch:
+                        Intent intentSearch = new Intent(RandomMovieActivity.this, SearchActivity.class);
+                        startActivity(intentSearch);
+                        overridePendingTransition(0,0);
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + item.getItemId());

@@ -60,6 +60,11 @@ public class FavouriteActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();
                         break;
+                    case R.id.bottomSearch:
+                        Intent intentSearch = new Intent(FavouriteActivity.this, SearchActivity.class);
+                        startActivity(intentSearch);
+                        overridePendingTransition(0,0);
+                        finish();
                     default:
                         throw new IllegalStateException("Unexpected value: " + item.getItemId());
                 }

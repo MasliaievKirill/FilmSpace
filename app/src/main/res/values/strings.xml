@@ -10,4 +10,5 @@
     <string name="bottom_favourites">Избранное</string>
     <string name="bottom_random">Random</string>
     <string name="launch_trailer">Запустить трейлер</string>
+    <string name="bottom_search">Поиск</string>
 </resources>

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FilmSpace">
         <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".RandomMovieActivity"
             android:exported="false" />
         <activity

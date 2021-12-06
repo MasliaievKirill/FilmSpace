@@ -27,12 +27,14 @@ public class NetworkUtils {
     private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
     private static final String BASE_URL_VIDEOS = "https://api.themoviedb.org/3/movie/%s/videos";
     private static final String BASE_URL_REVIEWS = "https://api.themoviedb.org/3/movie/%s/reviews";
+    private static final String BASE_URL_SEARCH = "https://api.themoviedb.org/3/search/movie";
 
     private static final String PARAMS_API_KEY = "api_key";
     private static final String PARAMS_LANGUAGE = "language";
     private static final String PARAMS_SORT_BY = "sort_by";
     private static final String PARAMS_PAGE = "page";
     private static final String PARAMS_MIN_VOTE_COUNT = "vote_count.gte";
+    private static final String PARAMS_QUERY = "query";
 
     private static final String API_KEY = "9f9d136877ade7608f32a571c18756be";
     private static final String SORT_BY_POPULARITY = "popularity.desc";
@@ -41,6 +43,19 @@ public class NetworkUtils {
 
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
+
+    public static URL buildURLToSearch (String query, int page) {
+        Uri uri = Uri.parse(BASE_URL_SEARCH).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .appendQueryParameter(PARAMS_QUERY, query)
+                .appendQueryParameter(PARAMS_PAGE, Integer.toString(page)).build();
+        try {
+            return new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static URL buildURLToVideos (int id, String lang) {
         Uri uri = Uri.parse(String.format(BASE_URL_VIDEOS, id)).buildUpon()

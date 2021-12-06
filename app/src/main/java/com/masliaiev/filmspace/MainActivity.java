@@ -91,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         overridePendingTransition(0,0);
                         finish();
                         break;
+                    case R.id.bottomSearch:
+                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
+                        startActivity(intentSearch);
+                        overridePendingTransition(0,0);
+                        finish();
+                        break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + item.getItemId());
                 }

@@ -13,4 +13,9 @@
         android:icon="@drawable/random_selection"
         android:title="@string/bottom_random" />
 
+    <item
+        android:id="@+id/bottomSearch"
+        android:icon="@drawable/random_selection"
+        android:title="@string/bottom_search" />
+
 </menu>

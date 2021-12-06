@@ -7,6 +7,7 @@
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/activity_favourite.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/activity_random_movie.xml" value="0.25" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/activity_search.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/fragment_home_blank.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/movie_info.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/movie_item.xml" value="0.25" />
@@ -14,8 +15,6 @@
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/layout/trailer_item.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/menu/bottom_menu.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/Filmspace/app/src/main/res/menu/main_menu.xml" value="0.25" />
-        <entry key="..\:/Users/maslyaev_kv/AndroidStudioProjects/FilmSpace/app/src/main/res/layout-land/activity_detail.xml" value="0.31040564373897706" />
-        <entry key="..\:/Users/maslyaev_kv/AndroidStudioProjects/FilmSpace/app/src/main/res/layout/activity_detail.xml" value="0.2957427536231884" />
       </map>
     </option>
   </component>
