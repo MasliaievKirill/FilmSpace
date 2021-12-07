@@ -19,8 +19,8 @@ public interface MovieDao {
     @Query("SELECT * FROM movies WHERE id == :movieId")
     Movie getMovieById (int movieId);
 
-//    @Query("SELECT 1 FROM favourite_movies WHERE id == :movieId")
-//    boolean existsMovie (int movieId);
+    @Query("SELECT EXISTS (SELECT * FROM favourite_movies WHERE id == :movieId LIMIT 1)")
+    int existsMovie (int movieId);
 
     @Query("SELECT * FROM favourite_movies WHERE id == :movieId")
     FavouriteMovie getFavouriteMovieById (int movieId);

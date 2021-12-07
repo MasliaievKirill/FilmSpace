@@ -23,6 +23,35 @@ public class MainViewModel extends AndroidViewModel {
         favouriteMovies = database.movieDao().getAllFavouriteMovies();
     }
 
+    public int exist (int movieId) {
+        try {
+            return new ExistMovieTask().execute(movieId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private static class ExistMovieTask extends AsyncTask <Integer, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            if(integers != null && integers.length > 0) {
+                return database.movieDao().existsMovie(integers[0]);
+            }
+            return 0;
+        }
+    }
+
+    public LiveData<List<Movie>> getMovies() {
+        return movies;
+    }
+
+    public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
+        return favouriteMovies;
+    }
+
     public Movie getMovieById (int id) {
         try {
             return new GetMovieTask().execute(id).get();
@@ -41,11 +70,6 @@ public class MainViewModel extends AndroidViewModel {
         return null;
     }
 
-    public LiveData<List<Movie>> getMovies() {
-        return movies;
-    }
-
-
     private static class GetMovieTask extends AsyncTask <Integer, Void, Movie> {
         @Override
         protected Movie doInBackground(Integer... integers) {
@@ -54,10 +78,6 @@ public class MainViewModel extends AndroidViewModel {
             }
             return null;
         }
-    }
-
-    public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
-        return favouriteMovies;
     }
 
     private static class GetFavouriteMovieTask extends AsyncTask <Integer, Void, FavouriteMovie> {
@@ -138,5 +158,6 @@ public class MainViewModel extends AndroidViewModel {
             return null;
         }
     }
+
 
 }

@@ -84,6 +84,13 @@ public class DetailActivity extends AppCompatActivity {
             movie = new Movie(intent.getIntExtra("id", -1), intent.getIntExtra("voteCount", 1), intent.getStringExtra("title"),intent.getStringExtra("originalTitle"),
                     intent.getStringExtra("overview"), intent.getStringExtra("posterPath"), intent.getStringExtra("bigPosterPath"), intent.getStringExtra("backdropPath"),
                     intent.getDoubleExtra("voteAverage", -1), intent.getStringExtra("releaseDate"));
+            if (viewModel.exist(movie.getId()) == 1) {
+                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
+            }
+
+            // Add method to set floating button
+
+
         } else {
             finish();
         }
