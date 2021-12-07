@@ -70,14 +70,32 @@ public class DetailActivity extends AppCompatActivity {
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
         textViewOverview = findViewById(R.id.textViewOverview);
         floatingActionButton = findViewById(R.id.floatingActionButtonAddToFavourite);
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("id")) {
+        if (intent != null && intent.hasExtra("id") && intent.hasExtra("main")) {
             id = intent.getIntExtra("id", -1);
+            movie = viewModel.getMovieById(id);
+        } else if (intent != null && intent.hasExtra("id") && intent.hasExtra("favourite")) {
+            id = intent.getIntExtra("id", -1);
+            movie = viewModel.getFavouriteMovieById(id);
+        } else if (intent != null && intent.hasExtra("search") && intent.hasExtra("id") && intent.hasExtra("voteCount")
+                && intent.hasExtra("title") && intent.hasExtra("originalTitle") && intent.hasExtra("overview") && intent.hasExtra("posterPath")
+                && intent.hasExtra("bigPosterPath") && intent.hasExtra("backdropPath")&& intent.hasExtra("voteAverage") && intent.hasExtra("releaseDate")){
+            movie = new Movie(intent.getIntExtra("id", -1), intent.getIntExtra("voteCount", 1), intent.getStringExtra("title"),intent.getStringExtra("originalTitle"),
+                    intent.getStringExtra("overview"), intent.getStringExtra("posterPath"), intent.getStringExtra("bigPosterPath"), intent.getStringExtra("backdropPath"),
+                    intent.getDoubleExtra("voteAverage", -1), intent.getStringExtra("releaseDate"));
         } else {
             finish();
         }
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        movie = viewModel.getMovieById(id);
+
+
+
+
+//        intent.putExtra("backdropPath", movie.getBackdropPath());
+//        intent.putExtra("voteAverage", movie.getVoteAverage());
+//        intent.putExtra("textViewReleaseDate", movie.getReleaseDate());
+
+
         Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());

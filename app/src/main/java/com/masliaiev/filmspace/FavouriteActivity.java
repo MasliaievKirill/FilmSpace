@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -66,7 +67,7 @@ public class FavouriteActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();
                     default:
-                        throw new IllegalStateException("Unexpected value: " + item.getItemId());
+                        Toast.makeText(FavouriteActivity.this, "error", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -77,14 +78,20 @@ public class FavouriteActivity extends AppCompatActivity {
         adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
-                Movie movie = adapter.getMovies().get(position);
-                Intent intent = new Intent(FavouriteActivity.this, DetailActivity.class);
-                intent.putExtra("id", movie.getId());
-                startActivity(intent);
+                if (position < 0) {
+                    Toast.makeText(FavouriteActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                } else {
+                    Movie movie = adapter.getMovies().get(position);
+                    Intent intent = new Intent(FavouriteActivity.this, DetailActivity.class);
+                    intent.putExtra("favourite", "favourite");
+                    intent.putExtra("id", movie.getId());
+                    startActivity(intent);
+                }
             }
         });
         recyclerViewFavouriteMovies.setAdapter(adapter);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        adapter.clear();
         LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
         favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override

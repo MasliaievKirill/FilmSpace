@@ -66,7 +66,7 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
                         overridePendingTransition(0,0);
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected value: " + item.getItemId());
+                        Toast.makeText(RandomActivity.this, "error", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }

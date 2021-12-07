@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         finish();
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected value: " + item.getItemId());
+                        Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onPosterClick(int position) {
                 Movie movie = movieAdapter.getMovies().get(position);
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("main", "main");
                 intent.putExtra("id", movie.getId());
                 startActivity(intent);
             }

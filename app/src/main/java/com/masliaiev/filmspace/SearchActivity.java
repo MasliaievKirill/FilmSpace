@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,14 +40,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private EditText editTextSearchQuery;
     private RecyclerView recyclerViewSearchedMovies;
     private MovieAdapter movieAdapter;
-    private ProgressBar progressBarLoadingSearchedMovies;
+//    private ProgressBar progressBarLoadingSearchedMovies;
     private BottomNavigationView bottomNavigationSearch;
 
     private MainViewModel viewModel;
 
     private static final int LOADER_ID = 134;
     private LoaderManager loaderManager;
-    private static boolean isLoading = false;
+//    private static boolean isLoading = false;
 
     private String query = null;
     private static int page = 1;
@@ -59,8 +61,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (actionBar != null) {
             actionBar.hide();
         }
-        loaderManager = LoaderManager.getInstance(this);
-        progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
+//        progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
         bottomNavigationSearch = findViewById(R.id.bottomNavigationViewSearch);
         Menu menu = bottomNavigationSearch.getMenu();
         menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
@@ -89,7 +90,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     case R.id.bottomSearch:
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected value: " + item.getItemId());
+                        Toast.makeText(SearchActivity.this, "error", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -99,37 +100,52 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         recyclerViewSearchedMovies = findViewById(R.id.recyclerViewSearchedMovies);
         recyclerViewSearchedMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
+        loaderManager = LoaderManager.getInstance(this);
         recyclerViewSearchedMovies.setAdapter(movieAdapter);
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
-                Movie movie = movieAdapter.getMovies().get(position);
-                Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
-                intent.putExtra("id", movie.getId());
-                startActivity(intent);
+                    Movie movie = movieAdapter.getMovies().get(position);
+                    if (movie != null) {
+                        Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
+                        intent.putExtra("search", "search");
+                        intent.putExtra("id", movie.getId());
+                        intent.putExtra("voteCount", movie.getVoteCount());
+                        intent.putExtra("title", movie.getTitle());
+                        intent.putExtra("originalTitle", movie.getOriginalTitle());
+                        intent.putExtra("overview", movie.getOverview());
+                        intent.putExtra("posterPath", movie.getPosterPath());
+                        intent.putExtra("bigPosterPath", movie.getBigPosterPath());
+                        intent.putExtra("backdropPath", movie.getBackdropPath());
+                        intent.putExtra("voteAverage", movie.getVoteAverage());
+                        intent.putExtra("releaseDate", movie.getReleaseDate());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(SearchActivity.this, "error", Toast.LENGTH_SHORT).show();
+                    }
             }
         });
-        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
-            @Override
-            public void onReachEnd() {
-                if (!isLoading) {
-                    downloadData(query, page);
-                }
-            }
-        });
+//        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
+//            @Override
+//            public void onReachEnd() {
+//                if (!isLoading) {
+//                    downloadData(query, page);
+//                }
+//            }
+//        });
     }
 
     @NonNull
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this, args);
-        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
-            @Override
-            public void onStartLoading() {
-                progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
-                isLoading = true;
-            }
-        });
+//        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
+//            @Override
+//            public void onStartLoading() {
+////                progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
+////                isLoading = true;
+//            }
+//        });
         return jsonLoader;
     }
 
@@ -137,11 +153,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(data);
         if (movies != null && !movies.isEmpty()) {
-            movieAdapter.addMovies(movies);
-            page++;
+            movieAdapter.setMovies(movies);
+//            page++;
         }
-        progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
-        isLoading = false;
+//        progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
+//        isLoading = false;
         loaderManager.destroyLoader(LOADER_ID);
 
     }
