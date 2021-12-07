@@ -6,7 +6,6 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -64,7 +63,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
         bottomNavigationSearch = findViewById(R.id.bottomNavigationViewSearch);
         Menu menu = bottomNavigationSearch.getMenu();
-
+        menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
         bottomNavigationSearch.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -82,7 +81,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         finish();
                         break;
                     case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(SearchActivity.this, RandomMovieActivity.class);
+                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
                         startActivity(intentRandom);
                         overridePendingTransition(0,0);
                         finish();

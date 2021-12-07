@@ -3,16 +3,12 @@ package com.masliaiev.filmspace;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,14 +17,9 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
-import com.masliaiev.filmspace.data.Movie;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class RandomMovieActivity extends AppCompatActivity implements SensorEventListener{
+public class RandomActivity extends AppCompatActivity implements SensorEventListener{
 
     private BottomNavigationView bottomNavigationViewRandom;
     private MainViewModel viewModel;
@@ -58,19 +49,19 @@ public class RandomMovieActivity extends AppCompatActivity implements SensorEven
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.bottomHome:
-                        Intent intentMainActivity = new Intent(RandomMovieActivity.this, MainActivity.class);
+                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
                         startActivity(intentMainActivity);
                         overridePendingTransition(0,0);
                         break;
                     case R.id.bottomFavourites:
-                        Intent intentFavourites = new Intent(RandomMovieActivity.this, FavouriteActivity.class);
+                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
                         startActivity(intentFavourites);
                         overridePendingTransition(0,0);
                         break;
                     case R.id.bottomRandom:
                         break;
                     case R.id.bottomSearch:
-                        Intent intentSearch = new Intent(RandomMovieActivity.this, SearchActivity.class);
+                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
                         startActivity(intentSearch);
                         overridePendingTransition(0,0);
                         break;

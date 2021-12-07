@@ -22,7 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         finish();
                         break;
                     case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(MainActivity.this, RandomMovieActivity.class);
+                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
                         startActivity(intentRandom);
                         overridePendingTransition(0,0);
                         finish();

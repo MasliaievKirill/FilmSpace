@@ -55,7 +55,7 @@ public class FavouriteActivity extends AppCompatActivity {
                     case R.id.bottomFavourites:
                         break;
                     case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(FavouriteActivity.this, RandomMovieActivity.class);
+                        Intent intentRandom = new Intent(FavouriteActivity.this, RandomActivity.class);
                         startActivity(intentRandom);
                         overridePendingTransition(0,0);
                         finish();
