@@ -87,15 +87,6 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             finish();
         }
-
-
-
-
-//        intent.putExtra("backdropPath", movie.getBackdropPath());
-//        intent.putExtra("voteAverage", movie.getVoteAverage());
-//        intent.putExtra("textViewReleaseDate", movie.getReleaseDate());
-
-
         Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
