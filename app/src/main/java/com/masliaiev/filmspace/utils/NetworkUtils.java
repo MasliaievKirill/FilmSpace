@@ -44,9 +44,10 @@ public class NetworkUtils {
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
 
-    public static URL buildURLToSearch (String query, int page) {
+    public static URL buildURLToSearch (String query, String lang, int page) {
         Uri uri = Uri.parse(BASE_URL_SEARCH).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .appendQueryParameter(PARAMS_LANGUAGE, lang)
                 .appendQueryParameter(PARAMS_QUERY, query)
                 .appendQueryParameter(PARAMS_PAGE, Integer.toString(page)).build();
         try {

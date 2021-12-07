@@ -34,23 +34,26 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
 
     private EditText editTextSearchQuery;
     private RecyclerView recyclerViewSearchedMovies;
     private MovieAdapter movieAdapter;
-//    private ProgressBar progressBarLoadingSearchedMovies;
+    private ProgressBar progressBarLoadingSearchedMovies;
     private BottomNavigationView bottomNavigationSearch;
 
     private MainViewModel viewModel;
 
     private static final int LOADER_ID = 134;
     private LoaderManager loaderManager;
-//    private static boolean isLoading = false;
+    private static boolean isLoading = false;
 
-    private String query = null;
+    private String query;
     private static int page = 1;
+
+    private static String lang;
 
 
     @Override
@@ -61,7 +64,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (actionBar != null) {
             actionBar.hide();
         }
-//        progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
+        lang = Locale.getDefault().getLanguage();
+        progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
         bottomNavigationSearch = findViewById(R.id.bottomNavigationViewSearch);
         Menu menu = bottomNavigationSearch.getMenu();
         menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
@@ -90,7 +94,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     case R.id.bottomSearch:
                         break;
                     default:
-                        Toast.makeText(SearchActivity.this, "error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, "error 1", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -121,31 +125,31 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         intent.putExtra("releaseDate", movie.getReleaseDate());
                         startActivity(intent);
                     } else {
-                        Toast.makeText(SearchActivity.this, "error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, "error 2", Toast.LENGTH_SHORT).show();
                     }
             }
         });
-//        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
-//            @Override
-//            public void onReachEnd() {
-//                if (!isLoading) {
-//                    downloadData(query, page);
-//                }
-//            }
-//        });
+        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
+            @Override
+            public void onReachEnd() {
+                if (!isLoading) {
+                    downloadData(query, lang, page);
+                }
+            }
+        });
     }
 
     @NonNull
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this, args);
-//        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
-//            @Override
-//            public void onStartLoading() {
-////                progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
-////                isLoading = true;
-//            }
-//        });
+        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
+            @Override
+            public void onStartLoading() {
+                progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
+                isLoading = true;
+            }
+        });
         return jsonLoader;
     }
 
@@ -153,11 +157,15 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(data);
         if (movies != null && !movies.isEmpty()) {
-            movieAdapter.setMovies(movies);
-//            page++;
+            if (page == 1) {
+                movieAdapter.setMovies(movies);
+            } else {
+                movieAdapter.addMovies(movies);
+            }
+            page++;
         }
-//        progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
-//        isLoading = false;
+        progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
+        isLoading = false;
         loaderManager.destroyLoader(LOADER_ID);
 
     }
@@ -176,16 +184,19 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
 
     public void onClickSearch(View view) {
+        movieAdapter.clear();
+        query = null;
+        page = 1;
         query = editTextSearchQuery.getText().toString().trim();
         if (!query.isEmpty()) {
-            downloadData(query, page);
+            downloadData(query, lang, page);
         } else {
             Toast.makeText(this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void downloadData (String query, int page) {
-        URL url = NetworkUtils.buildURLToSearch(query, page);
+    private void downloadData (String query, String lang, int page) {
+        URL url = NetworkUtils.buildURLToSearch(query, lang, page);
         Bundle bundle = new Bundle();
         bundle.putString("url", url.toString());
         loaderManager.restartLoader(LOADER_ID, bundle, this);

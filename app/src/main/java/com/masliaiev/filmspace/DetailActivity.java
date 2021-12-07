@@ -49,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     private int id;
     private Movie movie;
     private FavouriteMovie favouriteMovie;
+    private boolean fromSearchActivity = false;
 
     private MainViewModel viewModel;
 
@@ -84,14 +85,12 @@ public class DetailActivity extends AppCompatActivity {
             movie = new Movie(intent.getIntExtra("id", -1), intent.getIntExtra("voteCount", 1), intent.getStringExtra("title"),intent.getStringExtra("originalTitle"),
                     intent.getStringExtra("overview"), intent.getStringExtra("posterPath"), intent.getStringExtra("bigPosterPath"), intent.getStringExtra("backdropPath"),
                     intent.getDoubleExtra("voteAverage", -1), intent.getStringExtra("releaseDate"));
-            if (viewModel.exist(movie.getId()) == 1) {
-                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
-            }
-
-            // Add method to set floating button
-
-
-        } else {
+            fromSearchActivity = true;
+        } else if (intent != null && intent.hasExtra("id") && intent.hasExtra("random")){
+            id = intent.getIntExtra("id", -1);
+            movie = viewModel.getMovieById(id);
+        }
+        else {
             finish();
         }
         Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
@@ -131,16 +130,29 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             viewModel.deleteFavouriteMovie(favouriteMovie);
             Toast.makeText(this, R.string.delete_from_favourite, Toast.LENGTH_SHORT).show();
+            if (fromSearchActivity) {
+                favouriteMovie = null;
+            }
         }
         setFavourite();
     }
 
     private void setFavourite () {
-        favouriteMovie = viewModel.getFavouriteMovieById(id);
-        if (favouriteMovie == null) {
-            floatingActionButton.setImageResource(R.drawable.favourite_add_star);
-        } else  {
-            floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
+        if (!fromSearchActivity) {
+            favouriteMovie = viewModel.getFavouriteMovieById(id);
+            if (favouriteMovie == null) {
+                floatingActionButton.setImageResource(R.drawable.favourite_add_star);
+            } else {
+                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
+            }
+        } else {
+            if (viewModel.exist(movie.getId()) == 1) {
+                favouriteMovie = viewModel.getFavouriteMovieById(movie.getId());
+                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
+            } else {
+                favouriteMovie = null;
+                floatingActionButton.setImageResource(R.drawable.favourite_add_star);
+            }
         }
     }
 }

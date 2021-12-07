@@ -51,7 +51,6 @@ public class FavouriteActivity extends AppCompatActivity {
                         Intent intentMainActivity = new Intent(FavouriteActivity.this, MainActivity.class);
                         startActivity(intentMainActivity);
                         overridePendingTransition(0,0);
-                        finish();
                         break;
                     case R.id.bottomFavourites:
                         break;
@@ -59,15 +58,14 @@ public class FavouriteActivity extends AppCompatActivity {
                         Intent intentRandom = new Intent(FavouriteActivity.this, RandomActivity.class);
                         startActivity(intentRandom);
                         overridePendingTransition(0,0);
-                        finish();
                         break;
                     case R.id.bottomSearch:
                         Intent intentSearch = new Intent(FavouriteActivity.this, SearchActivity.class);
                         startActivity(intentSearch);
                         overridePendingTransition(0,0);
-                        finish();
+                        break;
                     default:
-                        Toast.makeText(FavouriteActivity.this, "error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FavouriteActivity.this, "errorF", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }

@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         finish();
                         break;
                     default:
-                        Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "errorM", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
