@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.adapters.MovieAdapter;
+import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
 import com.masliaiev.filmspace.data.Movie;
 import com.masliaiev.filmspace.utils.JSONUtils;
@@ -146,6 +147,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onChanged(List<Movie> movies) {
                 if (page == 1) {
                     movieAdapter.setMovies(movies);
+                }
+            }
+        });
+
+        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
+        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(List<FavouriteMovie> favouriteMovies) {
+                List<Movie> movies = new ArrayList<>();
+                if (favouriteMovies != null) {
+                    movies.addAll(favouriteMovies);
+                    if (movieAdapter.getFavouriteMovies() != null){
+                        movieAdapter.addFavouriteMovies(movies);
+                    }
+                    movieAdapter.setFavouriteMovies(movies);
                 }
             }
         });

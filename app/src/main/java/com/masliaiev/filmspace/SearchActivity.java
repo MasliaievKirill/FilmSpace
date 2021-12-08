@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -25,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.adapters.MovieAdapter;
+import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
 import com.masliaiev.filmspace.data.Movie;
 import com.masliaiev.filmspace.utils.JSONUtils;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
@@ -134,6 +138,17 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             public void onReachEnd() {
                 if (!isLoading) {
                     downloadData(query, lang, page);
+                }
+            }
+        });
+        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
+        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(List<FavouriteMovie> favouriteMovies) {
+                List<Movie> movies = new ArrayList<>();
+                if (favouriteMovies != null) {
+                    movies.addAll(favouriteMovies);
+                    movieAdapter.setFavouriteMovies(movies);
                 }
             }
         });
