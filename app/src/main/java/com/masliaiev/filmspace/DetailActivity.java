@@ -40,6 +40,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textViewReleaseDate;
     private TextView textViewOverview;
     private FloatingActionButton floatingActionButton;
+    private ImageView imageViewButtonToBack;
+    private TextView textViewTopTitle;
 
     private RecyclerView recyclerViewTrailers;
     private RecyclerView recyclerViewReviews;
@@ -64,6 +66,14 @@ public class DetailActivity extends AppCompatActivity {
             actionBar.hide();
         }
         lang = Locale.getDefault().getLanguage();
+        imageViewButtonToBack = findViewById(R.id.imageViewButtonToBack);
+        imageViewButtonToBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        textViewTopTitle = findViewById(R.id.textViewTopTitle);
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
@@ -95,6 +105,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
+        textViewTopTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
         textViewRating.setText(Double.toString(movie.getVoteAverage()));
         textViewReleaseDate.setText(movie.getReleaseDate());
