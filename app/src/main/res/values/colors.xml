@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="surface">#27292D</color>
     <color name="base">#1F2023</color>
+    <color name="overlay_light">#383B40</color>
 </resources>

@@ -7,48 +7,48 @@
     android:background="@color/surface"
     tools:context=".MainActivity">
 
-    <Switch
-        android:id="@+id/switchSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
     <TextView
         android:id="@+id/textViewPopularity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_background"
+        android:gravity="center"
         android:text="@string/popular_movies"
         android:textColor="@color/white"
-        android:onClick="onClickSetPopularity"
-        app:layout_constraintBottom_toBottomOf="@+id/switchSort"
-        app:layout_constraintEnd_toStartOf="@+id/switchSort"
-        app:layout_constraintTop_toTopOf="@+id/switchSort" />
+        app:layout_constraintBottom_toBottomOf="@id/guidelineTop"
+        app:layout_constraintEnd_toStartOf="@id/textViewTopRated"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/textViewTopRated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_background"
+        android:gravity="center"
         android:text="@string/rated_movies"
         android:textColor="@color/white"
-        android:onClick="onClickSetTopRated"
-        app:layout_constraintBottom_toBottomOf="@+id/switchSort"
-        app:layout_constraintStart_toEndOf="@+id/switchSort"
-        app:layout_constraintTop_toTopOf="@+id/switchSort" />
+        app:layout_constraintBottom_toBottomOf="@id/guidelineTop"
+        app:layout_constraintStart_toEndOf="@id/textViewPopularity"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="45dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPosters"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:backgroundTint="@color/base"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switchSort" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -73,5 +73,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

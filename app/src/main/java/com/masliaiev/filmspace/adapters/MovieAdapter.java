@@ -21,8 +21,6 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     private OnPosterClickListener onPosterClickListener;
     private OnReachEndListener onReachEndListener;
 
-    private List<Movie> favouriteMovies = null;
-
     public MovieAdapter () {
         movies = new ArrayList<>();
     }
@@ -57,13 +55,6 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         }
         Movie movie = movies.get(position);
         Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
-        if (favouriteMovies != null) {
-            for (Movie favouriteMovie : favouriteMovies) {
-                if (favouriteMovie.getId() == movie.getId()) {
-                    holder.imageViewInFavourite.setImageResource(R.drawable.favourite);
-                }
-            }
-        }
     }
 
     @Override
@@ -74,12 +65,10 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageViewSmallPoster;
-        private ImageView imageViewInFavourite;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
-            imageViewInFavourite = itemView.findViewById(R.id.imageViewInFavourite);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,23 +85,9 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         notifyDataSetChanged();
     }
 
-    public void clearFavourite () {
-        this.favouriteMovies.clear();
-        notifyDataSetChanged();
-    }
-
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
-    }
-
-    public void setFavouriteMovies(List<Movie> favouriteMovies) {
-        this.favouriteMovies = favouriteMovies;
-        notifyDataSetChanged();
-    }
-
-    public List<Movie> getFavouriteMovies() {
-        return favouriteMovies;
     }
 
     public List<Movie> getMovies() {
@@ -124,8 +99,5 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         notifyDataSetChanged();
     }
 
-    public void addFavouriteMovies (List<Movie> movies) {
-        this.favouriteMovies.addAll(movies);
-        notifyDataSetChanged();
-    }
+
 }

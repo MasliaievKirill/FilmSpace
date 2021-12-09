@@ -12,7 +12,10 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -42,7 +45,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
 
-    private Switch switchSort;
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
     private TextView textViewPopularity;
@@ -55,16 +57,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 133;
     private LoaderManager loaderManager;
 
-    private static int page = 1;
+    private static int page;
     private static int methodOfSort;
     private static boolean isLoading = false;
 
     private static String lang;
 
+    private static boolean connection = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkConnection();
+        if (!connection) {
+            Toast.makeText(this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
+        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -106,22 +114,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
         viewModel = new  ViewModelProvider(this).get(MainViewModel.class);
         progressBarLoading = findViewById(R.id.progressBarLoading);
-        switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
         recyclerViewPosters.setAdapter(movieAdapter);
-        switchSort.setChecked(true);
-        switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        page = 1;
+        setMethodOfSort(false);
+        textViewTopRated.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
                 page = 1;
-                setMethodOfSort(isChecked);
+                setMethodOfSort(true);
             }
         });
-        switchSort.setChecked(false);
+        textViewPopularity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = 1;
+                setMethodOfSort(false);
+            }
+        });
+
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
@@ -151,20 +166,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
-        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
-            @Override
-            public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                List<Movie> movies = new ArrayList<>();
-                if (favouriteMovies != null) {
-                    movies.addAll(favouriteMovies);
-                    if (movieAdapter.getFavouriteMovies() != null){
-                        movieAdapter.addFavouriteMovies(movies);
-                    }
-                    movieAdapter.setFavouriteMovies(movies);
-                }
-            }
-        });
 
     }
 
@@ -175,15 +176,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loaderManager.restartLoader(LOADER_ID, bundle, this);
     }
 
-    public void onClickSetPopularity(View view) {
-        setMethodOfSort(false);
-        switchSort.setChecked(false);
-    }
-
-    public void onClickSetTopRated(View view) {
-        setMethodOfSort(true);
-        switchSort.setChecked(true);
-    }
 
     private void setMethodOfSort (boolean isTopRated) {
         if (isTopRated) {
@@ -242,5 +234,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(@NonNull Loader<JSONObject> loader) {
 
+    }
+
+    private void checkConnection () {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connection = true;
+        }
     }
 }

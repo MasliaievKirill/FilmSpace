@@ -7,8 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,6 +18,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,6 +35,7 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
 
     private BottomNavigationView bottomNavigationViewRandom;
     private MainViewModel viewModel;
+    private TextView textViewWarning;
 
     private SensorManager sensorManager;
 
@@ -43,18 +48,23 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     List<Movie> moviesForRandom;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
         bottomNavigationViewRandom = findViewById(R.id.bottomNavigationViewRandom);
+        textViewWarning = findViewById(R.id.textViewWarning);
+        textViewWarning.setVisibility(View.INVISIBLE);
         Menu menu = bottomNavigationViewRandom.getMenu();
         menu.findItem(R.id.bottomRandom).setIcon(R.drawable.random_selection_white);
         bottomNavigationViewRandom.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -138,6 +148,8 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
                         intent.putExtra("random", "random");
                         intent.putExtra("id", movie.getId());
                         startActivity(intent);
+                    } else {
+                        textViewWarning.setVisibility(View.VISIBLE);
                     }
                 }
             }

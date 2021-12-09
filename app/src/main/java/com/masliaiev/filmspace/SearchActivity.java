@@ -1,11 +1,13 @@
 package com.masliaiev.filmspace;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -141,17 +143,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
-        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
-        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
-            @Override
-            public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                List<Movie> movies = new ArrayList<>();
-                if (favouriteMovies != null) {
-                    movies.addAll(favouriteMovies);
-                    movieAdapter.setFavouriteMovies(movies);
-                }
-            }
-        });
     }
 
     @NonNull
@@ -199,6 +190,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
 
     public void onClickSearch(View view) {
+        hideKeyboard();
         movieAdapter.clear();
         query = null;
         page = 1;
@@ -215,5 +207,10 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         Bundle bundle = new Bundle();
         bundle.putString("url", url.toString());
         loaderManager.restartLoader(LOADER_ID, bundle, this);
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 }
