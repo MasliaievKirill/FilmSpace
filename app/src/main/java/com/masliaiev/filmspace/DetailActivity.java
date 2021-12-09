@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private ImageView imageViewButtonToBack;
     private TextView textViewTopTitle;
+    private ScrollView scrollViewDetail;
 
     private RecyclerView recyclerViewTrailers;
     private RecyclerView recyclerViewReviews;
@@ -73,6 +75,7 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+        scrollViewDetail = findViewById(R.id.scrollViewDetail);
         textViewTopTitle = findViewById(R.id.textViewTopTitle);
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         textViewTitle = findViewById(R.id.textViewTitle);
@@ -132,6 +135,7 @@ public class DetailActivity extends AppCompatActivity {
         ArrayList<Review> reviews = JSONUtils.getReviewsFromJSON(jsonObjectReviews);
         trailerAdapter.setTrailers(trailers);
         reviewAdapter.setReviews(reviews);
+        scrollViewDetail.smoothScrollTo(0,0);
     }
 
     public void onClickChangeFavourite(View view) {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -71,7 +72,7 @@ public class FavouriteActivity extends AppCompatActivity {
             }
         });
         recyclerViewFavouriteMovies = findViewById(R.id.recyclerViewFavouriteMovies);
-        recyclerViewFavouriteMovies.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerViewFavouriteMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         adapter = new MovieAdapter();
         adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
@@ -103,5 +104,12 @@ public class FavouriteActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private int getColumnCount () {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
+        return width / 185 > 2 ? width / 185 : 2;
     }
 }

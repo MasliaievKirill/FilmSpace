@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Film space</string>
     <string name="poster_of_movie">Постер к фильму</string>
-    <string name="popular_movies">Популярные фильмы</string>
+    <string name="all_popular_movies">Все фильмы</string>
     <string name="rated_movies">Рейтинговые фильмы</string>
     <string name="AddToFavourite">Добавить в избранные</string>
     <string name="add_to_favourite">Добавлено в избранное</string>

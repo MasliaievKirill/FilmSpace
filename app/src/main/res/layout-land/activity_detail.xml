@@ -9,12 +9,34 @@
     tools:context=".DetailActivity">
 
     <ImageView
+        android:id="@+id/imageViewButtonToBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewTopTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewTopTitle"
+        app:srcCompat="@drawable/button_back" />
+
+    <TextView
+        android:id="@+id/textViewTopTitle"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageViewButtonToBack"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
         android:id="@+id/imageViewBigPoster"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTopTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -32,10 +54,11 @@
         app:maxImageSize="50dp"
         app:srcCompat="@drawable/favourite" />
     <ScrollView
+        android:id="@+id/scrollViewDetail"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTopTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageViewBigPoster">
 

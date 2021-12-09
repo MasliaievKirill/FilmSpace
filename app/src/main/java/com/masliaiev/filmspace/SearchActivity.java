@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -49,6 +52,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private MovieAdapter movieAdapter;
     private ProgressBar progressBarLoadingSearchedMovies;
     private BottomNavigationView bottomNavigationSearch;
+    private Button buttonSearch;
 
     private MainViewModel viewModel;
 
@@ -105,8 +109,24 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 return false;
             }
         });
+        buttonSearch = findViewById(R.id.buttonSearch);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search();
+            }
+        });
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         editTextSearchQuery = findViewById(R.id.editTextTextSearchQuery);
+        editTextSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search();
+                }
+                return false;
+            }
+        });
         recyclerViewSearchedMovies = findViewById(R.id.recyclerViewSearchedMovies);
         recyclerViewSearchedMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
@@ -169,6 +189,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 movieAdapter.addMovies(movies);
             }
             page++;
+        } else {
+            Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
         }
         progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
         isLoading = false;
@@ -188,8 +210,18 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         return width / 185 > 2 ? width / 185 : 2;
     }
 
+    private void downloadData (String query, String lang, int page) {
+        URL url = NetworkUtils.buildURLToSearch(query, lang, page);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url.toString());
+        loaderManager.restartLoader(LOADER_ID, bundle, this);
+    }
 
-    public void onClickSearch(View view) {
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(buttonSearch.getWindowToken(), 0);
+    }
+    private void search () {
         hideKeyboard();
         movieAdapter.clear();
         query = null;
@@ -198,19 +230,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (!query.isEmpty()) {
             downloadData(query, lang, page);
         } else {
-            Toast.makeText(this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();
+            Toast.makeText(SearchActivity.this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void downloadData (String query, String lang, int page) {
-        URL url = NetworkUtils.buildURLToSearch(query, lang, page);
-        Bundle bundle = new Bundle();
-        bundle.putString("url", url.toString());
-        loaderManager.restartLoader(LOADER_ID, bundle, this);
-    }
-
-    public void hideKeyboard() {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 }

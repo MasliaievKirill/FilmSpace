@@ -22,7 +22,8 @@
         app:layout_constraintEnd_toStartOf="@+id/buttonSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/round_background"/>
+        android:background="@drawable/round_background"
+        android:imeOptions="actionSearch"/>
 
     <Button
         android:id="@+id/buttonSearch"
@@ -30,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="10dp"
-        android:onClick="onClickSearch"
         android:text="Поиск"
         android:backgroundTint="@color/overlay_light"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
