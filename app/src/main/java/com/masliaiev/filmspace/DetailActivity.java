@@ -95,18 +95,22 @@ public class DetailActivity extends AppCompatActivity {
         } else if (intent != null && intent.hasExtra("search") && intent.hasExtra("id") && intent.hasExtra("voteCount")
                 && intent.hasExtra("title") && intent.hasExtra("originalTitle") && intent.hasExtra("overview") && intent.hasExtra("posterPath")
                 && intent.hasExtra("bigPosterPath") && intent.hasExtra("backdropPath")&& intent.hasExtra("voteAverage") && intent.hasExtra("releaseDate")){
+            id = intent.getIntExtra("id", -1);
             movie = new Movie(intent.getIntExtra("id", -1), intent.getIntExtra("voteCount", 1), intent.getStringExtra("title"),intent.getStringExtra("originalTitle"),
                     intent.getStringExtra("overview"), intent.getStringExtra("posterPath"), intent.getStringExtra("bigPosterPath"), intent.getStringExtra("backdropPath"),
                     intent.getDoubleExtra("voteAverage", -1), intent.getStringExtra("releaseDate"));
-            fromSearchActivity = true;
-        } else if (intent != null && intent.hasExtra("id") && intent.hasExtra("random")){
+        } else if (intent != null &&  intent.hasExtra("random") && intent.hasExtra("id") && intent.hasExtra("voteCount")
+                && intent.hasExtra("title") && intent.hasExtra("originalTitle") && intent.hasExtra("overview") && intent.hasExtra("posterPath")
+                && intent.hasExtra("bigPosterPath") && intent.hasExtra("backdropPath")&& intent.hasExtra("voteAverage") && intent.hasExtra("releaseDate")){
             id = intent.getIntExtra("id", -1);
-            movie = viewModel.getMovieById(id);
+            movie = new Movie(intent.getIntExtra("id", -1), intent.getIntExtra("voteCount", 1), intent.getStringExtra("title"),intent.getStringExtra("originalTitle"),
+                    intent.getStringExtra("overview"), intent.getStringExtra("posterPath"), intent.getStringExtra("bigPosterPath"), intent.getStringExtra("backdropPath"),
+                    intent.getDoubleExtra("voteAverage", -1), intent.getStringExtra("releaseDate"));
         }
         else {
             finish();
         }
-        Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        Picasso.get().load(movie.getBigPosterPath()).placeholder(R.drawable.placeholder_large).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
         textViewTopTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
@@ -153,21 +157,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setFavourite () {
-        if (!fromSearchActivity) {
             favouriteMovie = viewModel.getFavouriteMovieById(id);
             if (favouriteMovie == null) {
                 floatingActionButton.setImageResource(R.drawable.favourite_add_star);
             } else {
                 floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
             }
-        } else {
-            if (viewModel.exist(movie.getId()) == 1) {
-                favouriteMovie = viewModel.getFavouriteMovieById(movie.getId());
-                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
-            } else {
-                favouriteMovie = null;
-                floatingActionButton.setImageResource(R.drawable.favourite_add_star);
-            }
-        }
+
     }
 }

@@ -233,4 +233,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(SearchActivity.this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intentMainActivity = new Intent(SearchActivity.this, MainActivity.class);
+        startActivity(intentMainActivity);
+        overridePendingTransition(0,0);
+    }
 }

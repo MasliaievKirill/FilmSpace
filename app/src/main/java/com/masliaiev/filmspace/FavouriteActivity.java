@@ -112,4 +112,11 @@ public class FavouriteActivity extends AppCompatActivity {
         int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
         return width / 185 > 2 ? width / 185 : 2;
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intentMainActivity = new Intent(FavouriteActivity.this, MainActivity.class);
+        startActivity(intentMainActivity);
+        overridePendingTransition(0,0);
+    }
 }

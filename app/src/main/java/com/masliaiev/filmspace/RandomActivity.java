@@ -48,12 +48,10 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     List<Movie> moviesForRandom;
 
 
-    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -105,10 +103,12 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
                 List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies != null) {
                     movies.addAll(favouriteMovies);
+                    moviesForRandom.clear();
                     moviesForRandom.addAll(movies);
                 }
             }
         });
+
 
     }
 
@@ -143,10 +143,19 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
 
                     if (moviesForRandom.size() > 0) {
                         Movie movie = moviesForRandom.get((int) (Math.random() * moviesForRandom.size()));
-                        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RandomActivity.this, DetailActivity.class);
                         intent.putExtra("random", "random");
                         intent.putExtra("id", movie.getId());
+                        intent.putExtra("voteCount", movie.getVoteCount());
+                        intent.putExtra("title", movie.getTitle());
+                        intent.putExtra("originalTitle", movie.getOriginalTitle());
+                        intent.putExtra("overview", movie.getOverview());
+                        intent.putExtra("posterPath", movie.getPosterPath());
+                        intent.putExtra("bigPosterPath", movie.getBigPosterPath());
+                        intent.putExtra("backdropPath", movie.getBackdropPath());
+                        intent.putExtra("voteAverage", movie.getVoteAverage());
+                        intent.putExtra("releaseDate", movie.getReleaseDate());
                         startActivity(intent);
                     } else {
                         textViewWarning.setVisibility(View.VISIBLE);
@@ -159,5 +168,12 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
+        startActivity(intentMainActivity);
+        overridePendingTransition(0,0);
     }
 }

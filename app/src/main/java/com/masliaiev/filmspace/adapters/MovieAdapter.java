@@ -54,7 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
+        Picasso.get().load(movie.getPosterPath()).placeholder(R.drawable.placeholder_large).into(holder.imageViewSmallPoster);
     }
 
     @Override

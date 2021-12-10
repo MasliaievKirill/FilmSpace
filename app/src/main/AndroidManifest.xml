@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.masliaiev.filmspace">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +19,9 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".RandomActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".FavouriteActivity"
             android:exported="false" />
