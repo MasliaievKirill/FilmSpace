@@ -11,6 +11,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView textViewTopRated;
     private BottomNavigationView bottomNavigationView;
     private ProgressBar progressBarLoading;
+    private SwipeRefreshLayout swipeRefreshLayoutData;
 
     private MainViewModel viewModel;
 
@@ -77,6 +79,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (actionBar != null) {
             actionBar.hide();
         }
+        swipeRefreshLayoutData = findViewById(R.id.swipeToRefreshData);
+        swipeRefreshLayoutData.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checkConnection();
+                if (!connection) {
+                    Toast.makeText(MainActivity.this, "Данные не обновлены", Toast.LENGTH_SHORT).show();
+                } else {
+                    page = 1;
+                    isLoading = false;
+                    downloadData(methodOfSort, page);
+                    Toast.makeText(MainActivity.this, "Данные обновлены", Toast.LENGTH_SHORT).show();
+                }
+                swipeRefreshLayoutData.setRefreshing(false);
+            }
+        });
         lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
