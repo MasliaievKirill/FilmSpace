@@ -78,6 +78,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private SharedPreferences preferences;
     private SharedPreferences preferencesCount;
     private PreviouslySearchedAdapter previouslySearchedAdapter;
+    List<String> moviesPreviouslySearched;
 
 
     @Override
@@ -128,12 +129,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (preferencesCount.getInt("count", -1) == -1) {
             preferencesCount.edit().putInt("count", 1).apply();
         }
-        List<String> moviesPreviouslySearched = new ArrayList<>();
-        for (int i = 1; i <= 6; i++) {
-            if (preferences.getString("movie" + i, null) != null) {
-                moviesPreviouslySearched.add(preferences.getString("movie" + i, null));
-            }
-        }
         textViewPreviouslySearched = findViewById(R.id.textViewPreviouslySearched);
         buttonSearch = findViewById(R.id.buttonSearch);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +173,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 editTextSearchQuery.getText().clear();
+                getTitlesFromPreferences();
                 recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
                 textViewPreviouslySearched.setVisibility(View.VISIBLE);
                 recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
@@ -189,11 +185,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         recyclerViewPreviouslySearched = findViewById(R.id.recyclerViewPreviouslySearched);
         recyclerViewPreviouslySearched.setLayoutManager(new LinearLayoutManager(this));
+        moviesPreviouslySearched = new ArrayList<>();
         previouslySearchedAdapter = new PreviouslySearchedAdapter();
         recyclerViewPreviouslySearched.setAdapter(previouslySearchedAdapter);
-        if (moviesPreviouslySearched.size() > 0) {
-            previouslySearchedAdapter.addMoviesTitles(moviesPreviouslySearched);
-        }
+        getTitlesFromPreferences();
+
         previouslySearchedAdapter.setOnTitleClickListener(new PreviouslySearchedAdapter.OnTitleClickListener() {
             @Override
             public void onTitleClick(int position) {
@@ -213,9 +209,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             public void onPosterClick(int position) {
                 Movie movie = movieAdapter.getMovies().get(position);
                 if (movie != null) {
-                    if (!preferences.getString("movie1", null).equals(movie.getTitle()) && !preferences.getString("movie2", null).equals(movie.getTitle())
-                            && !preferences.getString("movie3", null).equals(movie.getTitle()) && !preferences.getString("movie4", null).equals(movie.getTitle())
-                            && !preferences.getString("movie5", null).equals(movie.getTitle()) && !preferences.getString("movie6", null).equals(movie.getTitle())) {
+                    if (!preferences.getString("movie1", "null").equals(movie.getTitle()) && !preferences.getString("movie2", "null").equals(movie.getTitle())
+                            && !preferences.getString("movie3", "null").equals(movie.getTitle()) && !preferences.getString("movie4", "null").equals(movie.getTitle())
+                            && !preferences.getString("movie5", "null").equals(movie.getTitle()) && !preferences.getString("movie6", "null").equals(movie.getTitle())) {
                         switch (preferencesCount.getInt("count", 0)) {
                             case 1:
                                 preferences.edit().putString("movie1", movie.getTitle()).apply();
@@ -363,5 +359,17 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         Intent intentMainActivity = new Intent(SearchActivity.this, MainActivity.class);
         startActivity(intentMainActivity);
         overridePendingTransition(0, 0);
+    }
+
+    private void getTitlesFromPreferences () {
+        moviesPreviouslySearched.clear();
+        for (int i = 1; i <= 6; i++) {
+            if (preferences.getString("movie" + i, null) != null) {
+                moviesPreviouslySearched.add(preferences.getString("movie" + i, null));
+            }
+        }
+        if (moviesPreviouslySearched.size() > 0) {
+            previouslySearchedAdapter.setMoviesTitles(moviesPreviouslySearched);
+        }
     }
 }
