@@ -17,4 +17,31 @@
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"/>
 
+    <ImageView
+        android:id="@+id/imageViewFavouriteIndicator"
+        android:contentDescription="@string/in_favourite"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/favourite_remove_star"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/textViewTitleIfPosterDoNotExist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewSmallPoster"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        android:background="@drawable/background_title_without_poster"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,4 +11,10 @@
     <string name="bottom_random">Random</string>
     <string name="launch_trailer">Запустить трейлер</string>
     <string name="bottom_search">Поиск</string>
+    <string name="title">Название:</string>
+    <string name="original_title">Оригинальное название:</string>
+    <string name="rating">Рейтинг:</string>
+    <string name="release_date">Дата релиза:</string>
+    <string name="description">Описание:</string>
+    <string name="in_favourite">В избранном</string>
 </resources>

@@ -10,12 +10,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,15 +37,18 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     private MainViewModel viewModel;
     private TextView textViewWarning;
 
+    private Vibrator vibrator;
+    private static final long SHORT_VIBRATION_MILLIS = 250L;
+    private static final long LONG_VIBRATION_MILLIS = 500L;
+
     private SensorManager sensorManager;
+    private Sensor shakeSensor;
 
     private static final float SHAKE_THRESHOLD = 3.25f;
     private static final int MIN_TIME_BETWEEN_SHAKES_MILLIS = 1000;
-    private long mLastShakeTime;
+    private long lastShakeTime;
 
-    private Sensor shakeSensor;
-
-    List<Movie> moviesForRandom;
+    private List<Movie> moviesForRandom;
 
 
     @Override
@@ -56,6 +59,7 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
         if (actionBar != null) {
             actionBar.hide();
         }
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         bottomNavigationViewRandom = findViewById(R.id.bottomNavigationViewRandom);
         textViewWarning = findViewById(R.id.textViewWarning);
         textViewWarning.setVisibility(View.INVISIBLE);
@@ -129,7 +133,7 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             long curTime = System.currentTimeMillis();
-            if ((curTime - mLastShakeTime) > MIN_TIME_BETWEEN_SHAKES_MILLIS) {
+            if ((curTime - lastShakeTime) > MIN_TIME_BETWEEN_SHAKES_MILLIS) {
 
                 float x = event.values[0];
                 float y = event.values[1];
@@ -139,9 +143,12 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
 
 
                 if (acceleration > SHAKE_THRESHOLD) {
-                    mLastShakeTime = curTime;
+                    lastShakeTime = curTime;
 
                     if (moviesForRandom.size() > 0) {
+                        if (vibrator.hasVibrator()) {
+                            vibrator.vibrate(SHORT_VIBRATION_MILLIS);
+                        }
                         Movie movie = moviesForRandom.get((int) (Math.random() * moviesForRandom.size()));
 //                        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RandomActivity.this, DetailActivity.class);
@@ -158,6 +165,9 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
                         intent.putExtra("releaseDate", movie.getReleaseDate());
                         startActivity(intent);
                     } else {
+                        if (vibrator.hasVibrator()) {
+                            vibrator.vibrate(LONG_VIBRATION_MILLIS);
+                        }
                         textViewWarning.setVisibility(View.VISIBLE);
                     }
                 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,22 +16,24 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<Movie> movies;
     private OnPosterClickListener onPosterClickListener;
     private OnReachEndListener onReachEndListener;
+    private List<Movie> favouriteMovies;
 
-    public MovieAdapter () {
+    public MovieAdapter() {
         movies = new ArrayList<>();
+        favouriteMovies = new ArrayList<>();
     }
 
     public interface OnPosterClickListener {
-        void onPosterClick (int position);
+        void onPosterClick(int position);
     }
 
     public interface OnReachEndListener {
-        void onReachEnd ();
+        void onReachEnd();
     }
 
     public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
@@ -55,6 +58,26 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         }
         Movie movie = movies.get(position);
         Picasso.get().load(movie.getPosterPath()).placeholder(R.drawable.placeholder_large).into(holder.imageViewSmallPoster);
+        holder.textViewTitleIfPosterDoNotExist.setText(movie.getTitle());
+        if (movie.getPosterPath().contains(".jpg")) {
+            holder.textViewTitleIfPosterDoNotExist.setVisibility(View.INVISIBLE);
+        } else {
+            holder.textViewTitleIfPosterDoNotExist.setVisibility(View.VISIBLE);
+        }
+        if (favouriteMovies != null) {
+            boolean inFavourite = false;
+            for (int i = 0; i < favouriteMovies.size(); i++) {
+                String originalTitle = favouriteMovies.get(i).getOriginalTitle();
+                if (originalTitle.equals(movie.getOriginalTitle())) {
+                    inFavourite = true;
+                }
+            }
+            if (inFavourite) {
+                holder.imageViewFavouriteIndicator.setVisibility(View.VISIBLE);
+            } else {
+                holder.imageViewFavouriteIndicator.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     @Override
@@ -65,10 +88,14 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageViewSmallPoster;
+        private ImageView imageViewFavouriteIndicator;
+        private TextView textViewTitleIfPosterDoNotExist;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
+            imageViewFavouriteIndicator = itemView.findViewById(R.id.imageViewFavouriteIndicator);
+            textViewTitleIfPosterDoNotExist = itemView.findViewById(R.id.textViewTitleIfPosterDoNotExist);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,7 +107,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         }
     }
 
-    public void clear () {
+    public void clear() {
         this.movies.clear();
         notifyDataSetChanged();
     }
@@ -90,12 +117,22 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         notifyDataSetChanged();
     }
 
+    public void setFavouriteMovies(List<Movie> favouriteMovies) {
+        this.favouriteMovies = favouriteMovies;
+        notifyDataSetChanged();
+    }
+
     public List<Movie> getMovies() {
         return movies;
     }
 
-    public void addMovies (List<Movie> movies) {
+    public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
+        notifyDataSetChanged();
+    }
+
+    public void addFavouriteMovies(List<Movie> movies) {
+        this.favouriteMovies.addAll(movies);
         notifyDataSetChanged();
     }
 

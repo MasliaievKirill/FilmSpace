@@ -2,7 +2,11 @@ package com.masliaiev.filmspace;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,11 +31,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.adapters.MovieAdapter;
+import com.masliaiev.filmspace.adapters.PreviouslySearchedAdapter;
 import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
 import com.masliaiev.filmspace.data.Movie;
@@ -53,6 +59,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private ProgressBar progressBarLoadingSearchedMovies;
     private BottomNavigationView bottomNavigationSearch;
     private Button buttonSearch;
+    private ImageView imageViewDeleteQuery;
 
     private MainViewModel viewModel;
 
@@ -64,6 +71,13 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private static int page = 1;
 
     private static String lang;
+
+
+    private TextView textViewPreviouslySearched;
+    private RecyclerView recyclerViewPreviouslySearched;
+    private SharedPreferences preferences;
+    private SharedPreferences preferencesCount;
+    private PreviouslySearchedAdapter previouslySearchedAdapter;
 
 
     @Override
@@ -86,19 +100,19 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                     case R.id.bottomHome:
                         Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
                         startActivity(intentHome);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         break;
                     case R.id.bottomFavourites:
                         Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
                         startActivity(intentFavourites);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         break;
                     case R.id.bottomRandom:
                         Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
                         startActivity(intentRandom);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         break;
                     case R.id.bottomSearch:
@@ -109,6 +123,18 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 return false;
             }
         });
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferencesCount = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferencesCount.getInt("count", -1) == -1) {
+            preferencesCount.edit().putInt("count", 1).apply();
+        }
+        List<String> moviesPreviouslySearched = new ArrayList<>();
+        for (int i = 1; i <= 6; i++) {
+            if (preferences.getString("movie" + i, null) != null) {
+                moviesPreviouslySearched.add(preferences.getString("movie" + i, null));
+            }
+        }
+        textViewPreviouslySearched = findViewById(R.id.textViewPreviouslySearched);
         buttonSearch = findViewById(R.id.buttonSearch);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +143,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
+        imageViewDeleteQuery.setVisibility(View.INVISIBLE);
         editTextSearchQuery = findViewById(R.id.editTextTextSearchQuery);
         editTextSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -127,32 +155,111 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 return false;
             }
         });
+        imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
+        imageViewDeleteQuery.setVisibility(View.INVISIBLE);
+        editTextSearchQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                imageViewDeleteQuery.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        imageViewDeleteQuery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextSearchQuery.getText().clear();
+                recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
+                textViewPreviouslySearched.setVisibility(View.VISIBLE);
+                recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
+            }
+        });
         recyclerViewSearchedMovies = findViewById(R.id.recyclerViewSearchedMovies);
         recyclerViewSearchedMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
+
+        recyclerViewPreviouslySearched = findViewById(R.id.recyclerViewPreviouslySearched);
+        recyclerViewPreviouslySearched.setLayoutManager(new LinearLayoutManager(this));
+        previouslySearchedAdapter = new PreviouslySearchedAdapter();
+        recyclerViewPreviouslySearched.setAdapter(previouslySearchedAdapter);
+        if (moviesPreviouslySearched.size() > 0) {
+            previouslySearchedAdapter.addMoviesTitles(moviesPreviouslySearched);
+        }
+        previouslySearchedAdapter.setOnTitleClickListener(new PreviouslySearchedAdapter.OnTitleClickListener() {
+            @Override
+            public void onTitleClick(int position) {
+                String title = previouslySearchedAdapter.getMoviesTitles().get(position);
+                if (title != null) {
+                    editTextSearchQuery.setText(title);
+                    search();
+                }
+            }
+        });
+
+
         loaderManager = LoaderManager.getInstance(this);
         recyclerViewSearchedMovies.setAdapter(movieAdapter);
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
-                    Movie movie = movieAdapter.getMovies().get(position);
-                    if (movie != null) {
-                        Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
-                        intent.putExtra("search", "search");
-                        intent.putExtra("id", movie.getId());
-                        intent.putExtra("voteCount", movie.getVoteCount());
-                        intent.putExtra("title", movie.getTitle());
-                        intent.putExtra("originalTitle", movie.getOriginalTitle());
-                        intent.putExtra("overview", movie.getOverview());
-                        intent.putExtra("posterPath", movie.getPosterPath());
-                        intent.putExtra("bigPosterPath", movie.getBigPosterPath());
-                        intent.putExtra("backdropPath", movie.getBackdropPath());
-                        intent.putExtra("voteAverage", movie.getVoteAverage());
-                        intent.putExtra("releaseDate", movie.getReleaseDate());
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(SearchActivity.this, "error 2", Toast.LENGTH_SHORT).show();
+                Movie movie = movieAdapter.getMovies().get(position);
+                if (movie != null) {
+                    if (!preferences.getString("movie1", null).equals(movie.getTitle()) && !preferences.getString("movie2", null).equals(movie.getTitle())
+                            && !preferences.getString("movie3", null).equals(movie.getTitle()) && !preferences.getString("movie4", null).equals(movie.getTitle())
+                            && !preferences.getString("movie5", null).equals(movie.getTitle()) && !preferences.getString("movie6", null).equals(movie.getTitle())) {
+                        switch (preferencesCount.getInt("count", 0)) {
+                            case 1:
+                                preferences.edit().putString("movie1", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 2).apply();
+                                break;
+                            case 2:
+                                preferences.edit().putString("movie2", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 3).apply();
+                                break;
+                            case 3:
+                                preferences.edit().putString("movie3", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 4).apply();
+                                break;
+                            case 4:
+                                preferences.edit().putString("movie4", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 5).apply();
+                                break;
+                            case 5:
+                                preferences.edit().putString("movie5", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 6).apply();
+                                break;
+                            case 6:
+                                preferences.edit().putString("movie6", movie.getTitle()).apply();
+                                preferencesCount.edit().putInt("count", 1).apply();
+                                break;
+                        }
                     }
+
+                    Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
+                    intent.putExtra("search", "search");
+                    intent.putExtra("id", movie.getId());
+                    intent.putExtra("voteCount", movie.getVoteCount());
+                    intent.putExtra("title", movie.getTitle());
+                    intent.putExtra("originalTitle", movie.getOriginalTitle());
+                    intent.putExtra("overview", movie.getOverview());
+                    intent.putExtra("posterPath", movie.getPosterPath());
+                    intent.putExtra("bigPosterPath", movie.getBigPosterPath());
+                    intent.putExtra("backdropPath", movie.getBackdropPath());
+                    intent.putExtra("voteAverage", movie.getVoteAverage());
+                    intent.putExtra("releaseDate", movie.getReleaseDate());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SearchActivity.this, "error 2", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
@@ -163,6 +270,19 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
+
+        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
+        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(List<FavouriteMovie> favouriteMovies) {
+                List<Movie> movies = new ArrayList<>();
+                if (favouriteMovies != null) {
+                    movies.addAll(favouriteMovies);
+                    movieAdapter.setFavouriteMovies(movies);
+                }
+            }
+        });
+
     }
 
     @NonNull
@@ -210,7 +330,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         return width / 185 > 2 ? width / 185 : 2;
     }
 
-    private void downloadData (String query, String lang, int page) {
+    private void downloadData(String query, String lang, int page) {
         URL url = NetworkUtils.buildURLToSearch(query, lang, page);
         Bundle bundle = new Bundle();
         bundle.putString("url", url.toString());
@@ -218,10 +338,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void hideKeyboard() {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(buttonSearch.getWindowToken(), 0);
     }
-    private void search () {
+
+    private void search() {
+        textViewPreviouslySearched.setVisibility(View.INVISIBLE);
+        recyclerViewPreviouslySearched.setVisibility(View.INVISIBLE);
+        recyclerViewSearchedMovies.setVisibility(View.VISIBLE);
         hideKeyboard();
         movieAdapter.clear();
         query = null;
@@ -238,6 +362,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     public void onBackPressed() {
         Intent intentMainActivity = new Intent(SearchActivity.this, MainActivity.class);
         startActivity(intentMainActivity);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
     }
 }

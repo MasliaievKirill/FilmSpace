@@ -8,12 +8,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/overlay_dark">
 
         <ImageView
             android:id="@+id/imageViewPlay"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/launch_trailer"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +26,8 @@
             android:id="@+id/textViewNameOfVideo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/imageViewPlay"
             app:layout_constraintEnd_toEndOf="parent"

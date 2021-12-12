@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="@color/base"
     tools:context=".SearchActivity">
 
     <EditText
@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:padding="6dp"
+        android:padding="10dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Введите название для поиска"
@@ -32,7 +32,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="10dp"
         android:text="Поиск"
-        android:backgroundTint="@color/overlay_light"
+        android:backgroundTint="@color/surface"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/editTextTextSearchQuery"
@@ -52,7 +52,8 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        android:visibility="gone"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationViewSearch"
@@ -77,4 +78,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/textViewPreviouslySearched"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ранее находили"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline2"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPreviouslySearched"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewSearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPreviouslySearched"/>
+
+    <ImageView
+        android:id="@+id/imageViewDeleteQuery"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextSearchQuery"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextSearchQuery"
+        app:layout_constraintTop_toTopOf="@+id/editTextTextSearchQuery"
+        app:srcCompat="@drawable/search_query_delete"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

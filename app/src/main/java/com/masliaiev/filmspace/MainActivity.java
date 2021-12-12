@@ -184,6 +184,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
+        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(List<FavouriteMovie> favouriteMovies) {
+                List<Movie> movies = new ArrayList<>();
+                if (favouriteMovies != null) {
+                    movies.addAll(favouriteMovies);
+                    movieAdapter.setFavouriteMovies(movies);
+                }
+            }
+        });
+
 
     }
 
