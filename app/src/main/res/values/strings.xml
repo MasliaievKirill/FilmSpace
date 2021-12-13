@@ -17,4 +17,8 @@
     <string name="release_date">Дата релиза:</string>
     <string name="description">Описание:</string>
     <string name="in_favourite">В избранном</string>
+    <string name="image_rocket">Изображение ракеты</string>
+    <string name="random_action_description">Давай выберем один случайный фильм из избранных.\nПросто встряхни устройство.\nПолетели!</string>
+    <string name="random_warning">Нет фильмов в избранном.\nДобавьте фильмы в коллекцию:)</string>
+    <string name="description_poster">Постер</string>
 </resources>

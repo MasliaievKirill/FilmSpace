@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,6 +34,7 @@ public class FavouriteActivity extends AppCompatActivity {
     private MovieAdapter adapter;
     private MainViewModel viewModel;
     private BottomNavigationView bottomNavigationViewFavourite;
+    private TextView textViewFavouriteWarning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class FavouriteActivity extends AppCompatActivity {
             actionBar.hide();
         }
         bottomNavigationViewFavourite = findViewById(R.id.bottomNavigationViewFavourite);
+        textViewFavouriteWarning = findViewById(R.id.textViewFavouriteWarning);
         Menu menu = bottomNavigationViewFavourite.getMenu();
         menu.findItem(R.id.bottomFavourites).setIcon(R.drawable.favourite_white);
         bottomNavigationViewFavourite.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -98,12 +102,15 @@ public class FavouriteActivity extends AppCompatActivity {
                 List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies != null) {
                     movies.addAll(favouriteMovies);
+                    if (movies.size() > 0) {
+                        textViewFavouriteWarning.setVisibility(View.INVISIBLE);
+                    } else {
+                        textViewFavouriteWarning.setVisibility(View.VISIBLE);
+                    }
                     adapter.setMovies(movies);
                 }
             }
         });
-
-
     }
 
     private int getColumnCount () {

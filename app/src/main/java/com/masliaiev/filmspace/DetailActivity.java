@@ -40,10 +40,10 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textViewRating;
     private TextView textViewReleaseDate;
     private TextView textViewOverview;
-    private FloatingActionButton floatingActionButton;
     private ImageView imageViewButtonToBack;
     private TextView textViewTopTitle;
     private ScrollView scrollViewDetail;
+    private ImageView imageViewAddToFavourite;
 
     private RecyclerView recyclerViewTrailers;
     private RecyclerView recyclerViewReviews;
@@ -83,7 +83,6 @@ public class DetailActivity extends AppCompatActivity {
         textViewRating = findViewById(R.id.textViewRating);
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
         textViewOverview = findViewById(R.id.textViewOverview);
-        floatingActionButton = findViewById(R.id.floatingActionButtonAddToFavourite);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("id") && intent.hasExtra("main")) {
@@ -110,6 +109,23 @@ public class DetailActivity extends AppCompatActivity {
         else {
             finish();
         }
+        imageViewAddToFavourite = findViewById(R.id.imageViewAddToFavourite);
+        imageViewAddToFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (favouriteMovie == null) {
+                    viewModel.insertFavouriteMovie(new FavouriteMovie(movie));
+                    Toast.makeText(DetailActivity.this, R.string.add_to_favourite, Toast.LENGTH_SHORT).show();
+                } else {
+                    viewModel.deleteFavouriteMovie(favouriteMovie);
+                    Toast.makeText(DetailActivity.this, R.string.delete_from_favourite, Toast.LENGTH_SHORT).show();
+                    if (fromSearchActivity) {
+                        favouriteMovie = null;
+                    }
+                }
+                setFavourite();
+            }
+        });
         Picasso.get().load(movie.getBigPosterPath()).placeholder(R.drawable.placeholder_large).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
         textViewTopTitle.setText(movie.getTitle());
@@ -142,26 +158,13 @@ public class DetailActivity extends AppCompatActivity {
         scrollViewDetail.smoothScrollTo(0,0);
     }
 
-    public void onClickChangeFavourite(View view) {
-        if (favouriteMovie == null) {
-            viewModel.insertFavouriteMovie(new FavouriteMovie(movie));
-            Toast.makeText(this, R.string.add_to_favourite, Toast.LENGTH_SHORT).show();
-        } else {
-            viewModel.deleteFavouriteMovie(favouriteMovie);
-            Toast.makeText(this, R.string.delete_from_favourite, Toast.LENGTH_SHORT).show();
-            if (fromSearchActivity) {
-                favouriteMovie = null;
-            }
-        }
-        setFavourite();
-    }
 
     private void setFavourite () {
             favouriteMovie = viewModel.getFavouriteMovieById(id);
             if (favouriteMovie == null) {
-                floatingActionButton.setImageResource(R.drawable.favourite_add_star);
+                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_white);
             } else {
-                floatingActionButton.setImageResource(R.drawable.favourite_remove_star);
+                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_gold);
             }
 
     }

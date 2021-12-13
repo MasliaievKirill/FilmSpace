@@ -12,4 +12,5 @@
     <color name="overflow">#010101</color>
     <color name="overlay_light">#383B40</color>
     <color name="overlay_dark">#2D2F34</color>
+    <color name="red">#80DF3024</color>
 </resources>

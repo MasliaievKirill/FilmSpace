@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="@color/base"
     tools:context=".RandomActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,12 +23,13 @@
 
     <ImageView
         android:id="@+id/imageViewRandomLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/image_rocket"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRandomInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textViewRandomInfo"
         app:srcCompat="@drawable/random_selection" />
 
     <TextView
@@ -37,9 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:padding="20dp"
-        android:background="@drawable/round_background"
+        android:background="@drawable/background_gray"
         android:gravity="center"
-        android:text="Давай выберем один случайный фильм из избранных.\nПросто встряхни устройство.\nПолетели!"
+        android:text="@string/random_action_description"
         android:textSize="20sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewRandom"
@@ -53,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:padding="20dp"
-        android:background="@drawable/round_background"
+        android:background="@drawable/background_red"
         android:gravity="center"
-        android:text="Нет фильмов в избранном.\nДобавьте фильмы в коллекцию:)"
+        android:text="@string/random_warning"
         android:textSize="20sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewRandom"

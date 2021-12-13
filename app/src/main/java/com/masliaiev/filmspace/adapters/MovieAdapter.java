@@ -126,6 +126,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
+    public List<Movie> getFavouriteMovies() {
+        return favouriteMovies;
+    }
+
     public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();

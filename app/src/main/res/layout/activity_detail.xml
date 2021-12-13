@@ -55,20 +55,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButtonAddToFavourite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Добавить/удалить в избранное"
-                app:backgroundTint="@color/white"
-                android:clickable="true"
-                android:onClick="onClickChangeFavourite"
-                android:layout_marginEnd="20dp"
+            <ImageView
+                android:id="@+id/imageViewAddToFavourite"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewBigPoster"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewBigPoster"
-                app:maxImageSize="50dp"
-                app:srcCompat="@drawable/favourite" />
+                android:layout_marginEnd="20dp"
+                app:srcCompat="@drawable/favourite_add_star_white" />
+
+
 
             <include
                 layout="@layout/movie_info"
@@ -78,7 +75,10 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/floatingActionButtonAddToFavourite"/>
+                app:layout_constraintTop_toBottomOf="@id/imageViewAddToFavourite"/>
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

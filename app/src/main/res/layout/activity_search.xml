@@ -28,7 +28,7 @@
     <Button
         android:id="@+id/buttonSearch"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="10dp"
         android:text="Поиск"
@@ -83,7 +83,13 @@
         android:id="@+id/textViewPreviouslySearched"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Ранее находили"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Тебе это было интересно:"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline2"/>
@@ -92,10 +98,12 @@
         android:id="@+id/recyclerViewPreviouslySearched"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPreviouslySearched"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewPreviouslySearched"
+        android:nestedScrollingEnabled="false"/>
 
     <ImageView
         android:id="@+id/imageViewDeleteQuery"
