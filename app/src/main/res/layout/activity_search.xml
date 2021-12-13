@@ -12,18 +12,22 @@
         android:id="@+id/editTextTextSearchQuery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="30dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Введите название для поиска"
+        android:inputType="text"
+        android:hint="@string/search_hint"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/buttonSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/round_background"
-        android:imeOptions="actionSearch"/>
+        android:imeOptions="actionSearch"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/buttonSearch"
@@ -31,28 +35,24 @@
         android:layout_height="55dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="10dp"
-        android:text="Поиск"
+        android:text="@string/search"
         android:backgroundTint="@color/surface"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toBottomOf="@id/editTextTextSearchQuery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/editTextTextSearchQuery"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/editTextTextSearchQuery" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSearchedMovies"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/editTextTextSearchQuery"
         android:visibility="gone"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -83,16 +83,16 @@
         android:id="@+id/textViewPreviouslySearched"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Тебе это было интересно:"
+        android:text="@string/search_history"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2"/>
+        app:layout_constraintTop_toBottomOf="@id/editTextTextSearchQuery"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPreviouslySearched"
@@ -107,6 +107,7 @@
 
     <ImageView
         android:id="@+id/imageViewDeleteQuery"
+        android:contentDescription="@string/clear"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="5dp"
@@ -114,6 +115,6 @@
         app:layout_constraintEnd_toEndOf="@+id/editTextTextSearchQuery"
         app:layout_constraintTop_toTopOf="@+id/editTextTextSearchQuery"
         app:srcCompat="@drawable/search_query_delete"
-        android:visibility="gone"/>
+        android:visibility="invisible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

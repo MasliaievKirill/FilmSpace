@@ -138,8 +138,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
-        imageViewDeleteQuery.setVisibility(View.INVISIBLE);
         editTextSearchQuery = findViewById(R.id.editTextTextSearchQuery);
         editTextSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -151,7 +149,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
         imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
-        imageViewDeleteQuery.setVisibility(View.INVISIBLE);
+        if (editTextSearchQuery.getText().equals("")){
+            imageViewDeleteQuery.setVisibility(View.INVISIBLE);
+        }
         editTextSearchQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,6 +169,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
             }
         });
+
         imageViewDeleteQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +280,15 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
+        if (savedInstanceState != null) {
+            editTextSearchQuery.setText(savedInstanceState.getString("query"));
+            if (savedInstanceState.getString("query") != null) {
+                search();
+            }
+            textViewPreviouslySearched.setVisibility(savedInstanceState.getInt("textViewPreviouslySearched"));
+            recyclerViewPreviouslySearched.setVisibility(savedInstanceState.getInt("recyclerViewPreviouslySearched"));
+            recyclerViewSearchedMovies.setVisibility(savedInstanceState.getInt("recyclerViewSearchedMovies"));
+        }
 
     }
 
@@ -372,5 +382,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (moviesPreviouslySearched.size() > 0) {
             previouslySearchedAdapter.setMoviesTitles(moviesPreviouslySearched);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("query", query);
+        outState.putInt("textViewPreviouslySearched", textViewPreviouslySearched.getVisibility());
+        outState.putInt("recyclerViewPreviouslySearched", recyclerViewPreviouslySearched.getVisibility());
+        outState.putInt("recyclerViewSearchedMovies", recyclerViewSearchedMovies.getVisibility());
     }
 }
