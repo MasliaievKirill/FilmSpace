@@ -40,19 +40,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonAddToFavourite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:backgroundTint="@color/white"
-        android:clickable="true"
-        android:onClick="onClickChangeFavourite"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
+    <ImageView
+        android:id="@+id/imageViewAddToFavourite"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="@id/imageViewBigPoster"
         app:layout_constraintTop_toTopOf="@+id/imageViewBigPoster"
-        app:maxImageSize="50dp"
-        app:srcCompat="@drawable/favourite" />
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/favourite_add_star_white" />
+
     <ScrollView
         android:id="@+id/scrollViewDetail"
         android:layout_width="0dp"

@@ -174,6 +174,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             public void onClick(View v) {
                 editTextSearchQuery.getText().clear();
                 getTitlesFromPreferences();
+                imageViewDeleteQuery.setVisibility(View.INVISIBLE);
                 recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
                 textViewPreviouslySearched.setVisibility(View.VISIBLE);
                 recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
