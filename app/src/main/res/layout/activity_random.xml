@@ -8,7 +8,7 @@
     tools:context=".RandomActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationViewRandom"
+        android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/surface"
@@ -43,7 +43,7 @@
         android:text="@string/random_action_description"
         android:textSize="20sp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewRandom"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +59,7 @@
         android:text="@string/random_warning"
         android:textSize="20sp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewRandom"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewRandomInfo"

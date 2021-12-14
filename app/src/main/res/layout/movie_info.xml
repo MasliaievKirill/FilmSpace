@@ -38,27 +38,29 @@
 
     <TextView
         android:id="@+id/textViewLabelOriginalTitle"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:gravity="start"
         android:text="@string/original_title"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        app:layout_constraintEnd_toEndOf="@id/guidelineCenter"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"/>
 
     <TextView
         android:id="@+id/textViewOriginalTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:gravity="start"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:maxLines="2"
+        android:ellipsize="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewLabelOriginalTitle" />
+        app:layout_constraintTop_toTopOf="@id/textViewLabelOriginalTitle" />
 
     <TextView
         android:id="@+id/textViewLabelRating"
@@ -70,19 +72,18 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelOriginalTitle" />
 
     <TextView
         android:id="@+id/textViewRating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+        app:layout_constraintTop_toTopOf="@id/textViewLabelRating" />
 
     <TextView
         android:id="@+id/textViewLabelReleaseDate"

@@ -33,7 +33,7 @@ import java.util.List;
 
 public class RandomActivity extends AppCompatActivity implements SensorEventListener{
 
-    private BottomNavigationView bottomNavigationViewRandom;
+    private BottomNavigationView bottomNavigationView;
     private MainViewModel viewModel;
     private TextView textViewWarning;
 
@@ -60,39 +60,40 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
             actionBar.hide();
         }
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        bottomNavigationViewRandom = findViewById(R.id.bottomNavigationViewRandom);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         textViewWarning = findViewById(R.id.textViewWarning);
         textViewWarning.setVisibility(View.INVISIBLE);
-        Menu menu = bottomNavigationViewRandom.getMenu();
-        menu.findItem(R.id.bottomRandom).setIcon(R.drawable.random_selection_white);
-        bottomNavigationViewRandom.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottomHome:
-                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
-                        startActivity(intentMainActivity);
-                        overridePendingTransition(0,0);
-                        break;
-                    case R.id.bottomFavourites:
-                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0,0);
-                        break;
-                    case R.id.bottomRandom:
-                        break;
-                    case R.id.bottomSearch:
-                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
-                        startActivity(intentSearch);
-                        overridePendingTransition(0,0);
-                        break;
-                    default:
-                        Toast.makeText(RandomActivity.this, "errorR", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
+        Menu menu = bottomNavigationView.getMenu();
+//        menu.findItem(R.id.bottomRandom).setIcon(R.drawable.random_selection_white);
+//        bottomNavigationView.clearAnimation();
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @SuppressLint("NonConstantResourceId")
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.bottomHome:
+//                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
+//                        startActivity(intentMainActivity);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    case R.id.bottomFavourites:
+//                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
+//                        startActivity(intentFavourites);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    case R.id.bottomRandom:
+//                        break;
+//                    case R.id.bottomSearch:
+//                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
+//                        startActivity(intentSearch);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    default:
+//                        Toast.makeText(RandomActivity.this, "errorR", Toast.LENGTH_SHORT).show();
+//                }
+//                return false;
+//            }
+//        });
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         shakeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 

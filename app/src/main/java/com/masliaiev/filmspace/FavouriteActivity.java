@@ -33,7 +33,7 @@ public class FavouriteActivity extends AppCompatActivity {
     private RecyclerView recyclerViewFavouriteMovies;
     private MovieAdapter adapter;
     private MainViewModel viewModel;
-    private BottomNavigationView bottomNavigationViewFavourite;
+    private BottomNavigationView bottomNavigationView;
     private TextView textViewFavouriteWarning;
 
     @Override
@@ -44,37 +44,38 @@ public class FavouriteActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        bottomNavigationViewFavourite = findViewById(R.id.bottomNavigationViewFavourite);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         textViewFavouriteWarning = findViewById(R.id.textViewFavouriteWarning);
-        Menu menu = bottomNavigationViewFavourite.getMenu();
-        menu.findItem(R.id.bottomFavourites).setIcon(R.drawable.favourite_white);
-        bottomNavigationViewFavourite.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottomHome:
-                        Intent intentMainActivity = new Intent(FavouriteActivity.this, MainActivity.class);
-                        startActivity(intentMainActivity);
-                        overridePendingTransition(0,0);
-                        break;
-                    case R.id.bottomFavourites:
-                        break;
-                    case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(FavouriteActivity.this, RandomActivity.class);
-                        startActivity(intentRandom);
-                        overridePendingTransition(0,0);
-                        break;
-                    case R.id.bottomSearch:
-                        Intent intentSearch = new Intent(FavouriteActivity.this, SearchActivity.class);
-                        startActivity(intentSearch);
-                        overridePendingTransition(0,0);
-                        break;
-                    default:
-                        Toast.makeText(FavouriteActivity.this, "errorF", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
+//        Menu menu = bottomNavigationView.getMenu();
+//        menu.findItem(R.id.bottomFavourites).setIcon(R.drawable.favourite_white);
+//        bottomNavigationView.clearAnimation();
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.bottomHome:
+//                        Intent intentMainActivity = new Intent(FavouriteActivity.this, MainActivity.class);
+//                        startActivity(intentMainActivity);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    case R.id.bottomFavourites:
+//                        break;
+//                    case R.id.bottomRandom:
+//                        Intent intentRandom = new Intent(FavouriteActivity.this, RandomActivity.class);
+//                        startActivity(intentRandom);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    case R.id.bottomSearch:
+//                        Intent intentSearch = new Intent(FavouriteActivity.this, SearchActivity.class);
+//                        startActivity(intentSearch);
+//                        overridePendingTransition(0,0);
+//                        break;
+//                    default:
+//                        Toast.makeText(FavouriteActivity.this, "errorF", Toast.LENGTH_SHORT).show();
+//                }
+//                return false;
+//            }
+//        });
         recyclerViewFavouriteMovies = findViewById(R.id.recyclerViewFavouriteMovies);
         recyclerViewFavouriteMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         adapter = new MovieAdapter();

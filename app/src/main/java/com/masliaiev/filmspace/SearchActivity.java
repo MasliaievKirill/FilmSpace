@@ -57,7 +57,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private RecyclerView recyclerViewSearchedMovies;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBarLoadingSearchedMovies;
-    private BottomNavigationView bottomNavigationSearch;
+    private BottomNavigationView bottomNavigationView;
     private Button buttonSearch;
     private ImageView imageViewDeleteQuery;
 
@@ -91,39 +91,40 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
         lang = Locale.getDefault().getLanguage();
         progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
-        bottomNavigationSearch = findViewById(R.id.bottomNavigationViewSearch);
-        Menu menu = bottomNavigationSearch.getMenu();
-        menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
-        bottomNavigationSearch.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottomHome:
-                        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
-                        startActivity(intentHome);
-                        overridePendingTransition(0, 0);
-                        finish();
-                        break;
-                    case R.id.bottomFavourites:
-                        Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0, 0);
-                        finish();
-                        break;
-                    case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
-                        startActivity(intentRandom);
-                        overridePendingTransition(0, 0);
-                        finish();
-                        break;
-                    case R.id.bottomSearch:
-                        break;
-                    default:
-                        Toast.makeText(SearchActivity.this, "error 1", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        Menu menu = bottomNavigationView.getMenu();
+//        menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
+//        bottomNavigationView.clearAnimation();
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.bottomHome:
+//                        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
+//                        startActivity(intentHome);
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        break;
+//                    case R.id.bottomFavourites:
+//                        Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
+//                        startActivity(intentFavourites);
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        break;
+//                    case R.id.bottomRandom:
+//                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
+//                        startActivity(intentRandom);
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        break;
+//                    case R.id.bottomSearch:
+//                        break;
+//                    default:
+//                        Toast.makeText(SearchActivity.this, "error 1", Toast.LENGTH_SHORT).show();
+//                }
+//                return false;
+//            }
+//        });
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferencesCount = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferencesCount.getInt("count", -1) == -1) {

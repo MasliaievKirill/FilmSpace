@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -98,38 +99,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        Navigation.findNavController(this)
         Menu menu = bottomNavigationView.getMenu();
-        menu.findItem(R.id.bottomHome).setIcon(R.drawable.home_white);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottomHome:
-                        break;
-                    case R.id.bottomFavourites:
-                        Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0,0);
-                        finish();
-                        break;
-                    case R.id.bottomRandom:
-                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
-                        startActivity(intentRandom);
-                        overridePendingTransition(0,0);
-                        finish();
-                        break;
-                    case R.id.bottomSearch:
-                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
-                        startActivity(intentSearch);
-                        overridePendingTransition(0,0);
-                        finish();
-                        break;
-                    default:
-                        Toast.makeText(MainActivity.this, "errorM", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });
+//        menu.findItem(R.id.bottomHome).setIcon(R.drawable.home_white);
+//        bottomNavigationView.clearAnimation();
+//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.bottomHome:
+//                        break;
+//                    case R.id.bottomFavourites:
+//                        Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
+//                        startActivity(intentFavourites);
+//                        overridePendingTransition(0,0);
+//                        finish();
+//                        break;
+//                    case R.id.bottomRandom:
+//                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
+//                        startActivity(intentRandom);
+//                        overridePendingTransition(0,0);
+//                        finish();
+//                        break;
+//                    case R.id.bottomSearch:
+//                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
+//                        startActivity(intentSearch);
+//                        overridePendingTransition(0,0);
+//                        finish();
+//                        break;
+//                    default:
+//                        Toast.makeText(MainActivity.this, "errorM", Toast.LENGTH_SHORT).show();
+//                }
+//                return false;
+//            }
+//        });
         viewModel = new  ViewModelProvider(this).get(MainViewModel.class);
         progressBarLoading = findViewById(R.id.progressBarLoading);
         textViewPopularity = findViewById(R.id.textViewPopularity);
@@ -271,5 +274,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             connection = true;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
     }
 }

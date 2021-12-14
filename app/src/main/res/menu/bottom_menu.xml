@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/bottomHome"
+        android:id="@+id/mainActivity"
         android:icon="@drawable/home"
-        android:title="@string/bottom_home" />
+        android:title="@string/bottom_home"/>
     <item
-        android:id="@+id/bottomFavourites"
+        android:id="@+id/favouriteActivity"
         android:icon="@drawable/favourite"
-        android:title="@string/bottom_favourites" />
+        android:title="@string/bottom_favourites"/>
     <item
-        android:id="@+id/bottomRandom"
+        android:id="@+id/randomActivity"
         android:icon="@drawable/random_selection"
-        android:title="@string/bottom_random" />
+        android:title="@string/bottom_random"/>
 
     <item
-        android:id="@+id/bottomSearch"
+        android:id="@+id/searchActivity"
         android:icon="@drawable/search"
-        android:title="@string/bottom_search" />
+        android:title="@string/bottom_search"/>
 
 </menu>
