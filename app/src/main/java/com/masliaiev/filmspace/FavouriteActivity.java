@@ -108,6 +108,7 @@ public class FavouriteActivity extends AppCompatActivity {
                         textViewFavouriteWarning.setVisibility(View.VISIBLE);
                     }
                     adapter.setMovies(movies);
+                    adapter.setFavouriteMovies(movies);
                 }
             }
         });

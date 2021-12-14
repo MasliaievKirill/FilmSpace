@@ -162,9 +162,9 @@ public class DetailActivity extends AppCompatActivity {
     private void setFavourite () {
             favouriteMovie = viewModel.getFavouriteMovieById(id);
             if (favouriteMovie == null) {
-                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_white);
+                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_white_small);
             } else {
-                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_gold);
+                imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_star_gold_small);
             }
 
     }

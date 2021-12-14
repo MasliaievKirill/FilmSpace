@@ -149,9 +149,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
         imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
-        if (editTextSearchQuery.getText().equals("")){
-            imageViewDeleteQuery.setVisibility(View.INVISIBLE);
-        }
         editTextSearchQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -160,7 +157,18 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                imageViewDeleteQuery.setVisibility(View.VISIBLE);
+                if (s.length() == 0) {
+                    movieAdapter.clear();
+                    imageViewDeleteQuery.setVisibility(View.INVISIBLE);
+                    textViewPreviouslySearched.setVisibility(View.VISIBLE);
+                    recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
+                    recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
+                } else {
+                    imageViewDeleteQuery.setVisibility(View.VISIBLE);
+                    textViewPreviouslySearched.setVisibility(View.INVISIBLE);
+                    recyclerViewPreviouslySearched.setVisibility(View.INVISIBLE);
+                    recyclerViewSearchedMovies.setVisibility(View.VISIBLE);
+                }
 
             }
 
@@ -282,7 +290,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         });
         if (savedInstanceState != null) {
             editTextSearchQuery.setText(savedInstanceState.getString("query"));
-            if (savedInstanceState.getString("query") != null) {
+            if (!editTextSearchQuery.getText().toString().equals("")) {
                 search();
             }
             textViewPreviouslySearched.setVisibility(savedInstanceState.getInt("textViewPreviouslySearched"));
@@ -350,15 +358,12 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void search() {
-        textViewPreviouslySearched.setVisibility(View.INVISIBLE);
-        recyclerViewPreviouslySearched.setVisibility(View.INVISIBLE);
-        recyclerViewSearchedMovies.setVisibility(View.VISIBLE);
-        hideKeyboard();
-        movieAdapter.clear();
         query = null;
         page = 1;
         query = editTextSearchQuery.getText().toString().trim();
         if (!query.isEmpty()) {
+            hideKeyboard();
+            movieAdapter.clear();
             downloadData(query, lang, page);
         } else {
             Toast.makeText(SearchActivity.this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();

@@ -21,7 +21,7 @@
     <string name="random_action_description">Давай выберем один случайный фильм из избранных.\nПросто встряхни устройство.\nПолетели!</string>
     <string name="random_warning">Нет фильмов в избранном.\nДобавьте фильмы в коллекцию:)</string>
     <string name="description_poster">Постер</string>
-    <string name="search_hint">Введите название для поиска</string>
+    <string name="search_hint">Введите название</string>
     <string name="search">Поиск</string>
     <string name="search_history">Тебе это было интересно:</string>
     <string name="clear">Очистить</string>

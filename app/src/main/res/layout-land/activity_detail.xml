@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageViewButtonToBack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@id/textViewTopTitle"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,13 +22,13 @@
         android:id="@+id/textViewTopTitle"
         android:layout_width="0dp"
         android:layout_height="54dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="48dp"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageViewButtonToBack"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageViewBigPoster"
@@ -59,17 +59,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageViewBigPoster">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <include
             layout="@layout/movie_info"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:id="@+id/movieInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTrailers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movieInfo"
+            android:nestedScrollingEnabled="false"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewReviews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewTrailers"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:nestedScrollingEnabled="false"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </ScrollView>
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
