@@ -16,7 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -33,8 +32,6 @@ import java.util.List;
 
 public class RandomActivity extends AppCompatActivity implements SensorEventListener{
 
-    private BottomNavigationView bottomNavigationView;
-    private MainViewModel viewModel;
     private TextView textViewWarning;
 
     private Vibrator vibrator;
@@ -60,44 +57,41 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
             actionBar.hide();
         }
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.randomActivity);
         textViewWarning = findViewById(R.id.textViewWarning);
         textViewWarning.setVisibility(View.INVISIBLE);
-        Menu menu = bottomNavigationView.getMenu();
-//        menu.findItem(R.id.bottomRandom).setIcon(R.drawable.random_selection_white);
-//        bottomNavigationView.clearAnimation();
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @SuppressLint("NonConstantResourceId")
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.bottomHome:
-//                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
-//                        startActivity(intentMainActivity);
-//                        overridePendingTransition(0,0);
-//                        break;
-//                    case R.id.bottomFavourites:
-//                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
-//                        startActivity(intentFavourites);
-//                        overridePendingTransition(0,0);
-//                        break;
-//                    case R.id.bottomRandom:
-//                        break;
-//                    case R.id.bottomSearch:
-//                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
-//                        startActivity(intentSearch);
-//                        overridePendingTransition(0,0);
-//                        break;
-//                    default:
-//                        Toast.makeText(RandomActivity.this, "errorR", Toast.LENGTH_SHORT).show();
-//                }
-//                return false;
-//            }
-//        });
+        bottomNavigationView.getMenu().findItem(R.id.randomActivity).setIcon(R.drawable.random_selection_white);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mainActivity:
+                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
+                        startActivity(intentMainActivity);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.favouriteActivity:
+                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
+                        startActivity(intentFavourites);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.randomActivity:
+                        return true;
+                    case R.id.searchActivity:
+                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
+                        startActivity(intentSearch);
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         shakeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         moviesForRandom = new ArrayList<>();
 
@@ -105,9 +99,8 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
         favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies != null) {
-                    movies.addAll(favouriteMovies);
+                    List<Movie> movies = new ArrayList<>(favouriteMovies);
                     moviesForRandom.clear();
                     moviesForRandom.addAll(movies);
                 }
@@ -151,7 +144,6 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
                             vibrator.vibrate(SHORT_VIBRATION_MILLIS);
                         }
                         Movie movie = moviesForRandom.get((int) (Math.random() * moviesForRandom.size()));
-//                        Toast.makeText(this, movie.getTitle(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RandomActivity.this, DetailActivity.class);
                         intent.putExtra("random", "random");
                         intent.putExtra("id", movie.getId());

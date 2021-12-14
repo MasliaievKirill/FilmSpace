@@ -15,7 +15,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.masliaiev.filmspace.adapters.ReviewAdapter;
 import com.masliaiev.filmspace.adapters.TrailerAdapter;
 import com.masliaiev.filmspace.data.FavouriteMovie;
@@ -34,21 +33,7 @@ import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private ImageView imageViewBigPoster;
-    private TextView textViewTitle;
-    private TextView textViewOriginalTitle;
-    private TextView textViewRating;
-    private TextView textViewReleaseDate;
-    private TextView textViewOverview;
-    private ImageView imageViewButtonToBack;
-    private TextView textViewTopTitle;
-    private ScrollView scrollViewDetail;
     private ImageView imageViewAddToFavourite;
-
-    private RecyclerView recyclerViewTrailers;
-    private RecyclerView recyclerViewReviews;
-    private ReviewAdapter reviewAdapter;
-    private TrailerAdapter trailerAdapter;
 
     private int id;
     private Movie movie;
@@ -56,8 +41,6 @@ public class DetailActivity extends AppCompatActivity {
     private boolean fromSearchActivity = false;
 
     private MainViewModel viewModel;
-
-    private static String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +50,22 @@ public class DetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        lang = Locale.getDefault().getLanguage();
-        imageViewButtonToBack = findViewById(R.id.imageViewButtonToBack);
+        String lang = Locale.getDefault().getLanguage();
+        ImageView imageViewButtonToBack = findViewById(R.id.imageViewButtonToBack);
         imageViewButtonToBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        scrollViewDetail = findViewById(R.id.scrollViewDetail);
-        textViewTopTitle = findViewById(R.id.textViewTopTitle);
-        imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
-        textViewTitle = findViewById(R.id.textViewTitle);
-        textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
-        textViewRating = findViewById(R.id.textViewRating);
-        textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
-        textViewOverview = findViewById(R.id.textViewOverview);
+        ScrollView scrollViewDetail = findViewById(R.id.scrollViewDetail);
+        TextView textViewTopTitle = findViewById(R.id.textViewTopTitle);
+        ImageView imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
+        TextView textViewTitle = findViewById(R.id.textViewTitle);
+        TextView textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
+        TextView textViewRating = findViewById(R.id.textViewRating);
+        TextView textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
+        TextView textViewOverview = findViewById(R.id.textViewOverview);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("id") && intent.hasExtra("main")) {
@@ -134,9 +117,9 @@ public class DetailActivity extends AppCompatActivity {
         textViewReleaseDate.setText(movie.getReleaseDate());
         textViewOverview.setText(movie.getOverview());
         setFavourite();
-        recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
-        recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
-        trailerAdapter = new TrailerAdapter();
+        RecyclerView recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
+        RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+        TrailerAdapter trailerAdapter = new TrailerAdapter();
         trailerAdapter.setOnTrailerClickListener(new TrailerAdapter.OnTrailerClickListener() {
             @Override
             public void onTrailerClick(String url) {
@@ -144,7 +127,7 @@ public class DetailActivity extends AppCompatActivity {
                 startActivity(intentToTrailer);
             }
         });
-        reviewAdapter = new ReviewAdapter();
+        ReviewAdapter reviewAdapter = new ReviewAdapter();
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewTrailers.setAdapter(trailerAdapter);

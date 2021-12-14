@@ -1,5 +1,6 @@
 package com.masliaiev.filmspace;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -57,11 +57,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private RecyclerView recyclerViewSearchedMovies;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBarLoadingSearchedMovies;
-    private BottomNavigationView bottomNavigationView;
     private Button buttonSearch;
     private ImageView imageViewDeleteQuery;
-
-    private MainViewModel viewModel;
 
     private static final int LOADER_ID = 134;
     private LoaderManager loaderManager;
@@ -91,40 +88,35 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
         lang = Locale.getDefault().getLanguage();
         progressBarLoadingSearchedMovies = findViewById(R.id.progressBarLoadingSearchedMovies);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        Menu menu = bottomNavigationView.getMenu();
-//        menu.findItem(R.id.bottomSearch).setIcon(R.drawable.search_white);
-//        bottomNavigationView.clearAnimation();
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.bottomHome:
-//                        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
-//                        startActivity(intentHome);
-//                        overridePendingTransition(0, 0);
-//                        finish();
-//                        break;
-//                    case R.id.bottomFavourites:
-//                        Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
-//                        startActivity(intentFavourites);
-//                        overridePendingTransition(0, 0);
-//                        finish();
-//                        break;
-//                    case R.id.bottomRandom:
-//                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
-//                        startActivity(intentRandom);
-//                        overridePendingTransition(0, 0);
-//                        finish();
-//                        break;
-//                    case R.id.bottomSearch:
-//                        break;
-//                    default:
-//                        Toast.makeText(SearchActivity.this, "error 1", Toast.LENGTH_SHORT).show();
-//                }
-//                return false;
-//            }
-//        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.searchActivity);
+        bottomNavigationView.getMenu().findItem(R.id.searchActivity).setIcon(R.drawable.search_white);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mainActivity:
+                        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
+                        startActivity(intentHome);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.favouriteActivity:
+                        Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
+                        startActivity(intentFavourites);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.randomActivity:
+                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
+                        startActivity(intentRandom);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.searchActivity:
+                        return true;
+                }
+                return false;
+            }
+        });
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferencesCount = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferencesCount.getInt("count", -1) == -1) {
@@ -138,7 +130,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 search();
             }
         });
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         editTextSearchQuery = findViewById(R.id.editTextTextSearchQuery);
         editTextSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -282,9 +274,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies != null) {
-                    movies.addAll(favouriteMovies);
+                    List<Movie> movies = new ArrayList<>(favouriteMovies);
                     movieAdapter.setFavouriteMovies(movies);
                 }
             }
@@ -318,7 +309,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(data);
-        if (movies != null && !movies.isEmpty()) {
+        if (!movies.isEmpty()) {
             if (page == 1) {
                 movieAdapter.setMovies(movies);
             } else {
@@ -343,13 +334,15 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-        return width / 185 > 2 ? width / 185 : 2;
+        return Math.max(width / 185, 2);
     }
 
     private void downloadData(String query, String lang, int page) {
         URL url = NetworkUtils.buildURLToSearch(query, lang, page);
         Bundle bundle = new Bundle();
-        bundle.putString("url", url.toString());
+        if (url != null) {
+            bundle.putString("url", url.toString());
+        }
         loaderManager.restartLoader(LOADER_ID, bundle, this);
     }
 

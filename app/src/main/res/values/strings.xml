@@ -25,4 +25,5 @@
     <string name="search">Поиск</string>
     <string name="search_history">Тебе это было интересно:</string>
     <string name="clear">Очистить</string>
+    <string name="favourites_is_empty">Фильмов пока нет.</string>
 </resources>

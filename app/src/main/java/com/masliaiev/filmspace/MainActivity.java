@@ -9,23 +9,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +44,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
 
-    private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
     private TextView textViewPopularity;
     private TextView textViewTopRated;
-    private BottomNavigationView bottomNavigationView;
     private ProgressBar progressBarLoading;
     private SwipeRefreshLayout swipeRefreshLayoutData;
 
@@ -98,46 +93,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
         lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        Navigation.findNavController(this)
-        Menu menu = bottomNavigationView.getMenu();
-//        menu.findItem(R.id.bottomHome).setIcon(R.drawable.home_white);
-//        bottomNavigationView.clearAnimation();
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.bottomHome:
-//                        break;
-//                    case R.id.bottomFavourites:
-//                        Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
-//                        startActivity(intentFavourites);
-//                        overridePendingTransition(0,0);
-//                        finish();
-//                        break;
-//                    case R.id.bottomRandom:
-//                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
-//                        startActivity(intentRandom);
-//                        overridePendingTransition(0,0);
-//                        finish();
-//                        break;
-//                    case R.id.bottomSearch:
-//                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
-//                        startActivity(intentSearch);
-//                        overridePendingTransition(0,0);
-//                        finish();
-//                        break;
-//                    default:
-//                        Toast.makeText(MainActivity.this, "errorM", Toast.LENGTH_SHORT).show();
-//                }
-//                return false;
-//            }
-//        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.mainActivity);
+        bottomNavigationView.getMenu().findItem(R.id.mainActivity).setIcon(R.drawable.home_white);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mainActivity:
+                        return true;
+                    case R.id.favouriteActivity:
+                        Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
+                        startActivity(intentFavourites);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.randomActivity:
+                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
+                        startActivity(intentRandom);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.searchActivity:
+                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
+                        startActivity(intentSearch);
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
         viewModel = new  ViewModelProvider(this).get(MainViewModel.class);
         progressBarLoading = findViewById(R.id.progressBarLoading);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
-        recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
+        RecyclerView recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
         recyclerViewPosters.setAdapter(movieAdapter);
@@ -191,9 +180,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies != null) {
-                    movies.addAll(favouriteMovies);
+                    List<Movie> movies = new ArrayList<>(favouriteMovies);
                     movieAdapter.setFavouriteMovies(movies);
                 }
             }
@@ -227,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-        return width / 185 > 2 ? width / 185 : 2;
+        return Math.max(width / 185, 2);
     }
 
     @NonNull
@@ -247,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(data);
-        if (movies != null && !movies.isEmpty()) {
+        if (!movies.isEmpty()) {
             if (page == 1) {
                 viewModel.deleteAllMovies();
                 movieAdapter.clear();

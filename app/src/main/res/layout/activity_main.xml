@@ -68,6 +68,8 @@
         android:layout_height="56dp"
         android:background="@color/surface"
         app:itemIconSize="24sp"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
