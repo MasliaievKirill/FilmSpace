@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView textViewTopRated;
     private ProgressBar progressBarLoading;
     private SwipeRefreshLayout swipeRefreshLayoutData;
-
     private MainViewModel viewModel;
 
     private static final int LOADER_ID = 133;
@@ -135,15 +134,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         textViewTopRated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkConnection();
                 page = 1;
                 setMethodOfSort(true);
+                if (!connection) {
+                    Toast.makeText(MainActivity.this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         textViewPopularity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkConnection();
                 page = 1;
                 setMethodOfSort(false);
+                if (!connection) {
+                    Toast.makeText(MainActivity.this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -201,12 +208,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void setMethodOfSort (boolean isTopRated) {
         if (isTopRated) {
             methodOfSort = NetworkUtils.TOP_RATED;
-            textViewPopularity.setTextColor(getResources().getColor(R.color.white));
-            textViewTopRated.setTextColor(getResources().getColor(R.color.teal_200));
+            textViewPopularity.setBackgroundResource(R.drawable.background_gray);
+            textViewTopRated.setBackgroundResource(R.drawable.background_light_gray);
         } else {
             methodOfSort = NetworkUtils.POPULARITY;
-            textViewPopularity.setTextColor(getResources().getColor(R.color.teal_200));
-            textViewTopRated.setTextColor(getResources().getColor(R.color.white));
+            textViewPopularity.setBackgroundResource(R.drawable.background_light_gray);
+            textViewTopRated.setBackgroundResource(R.drawable.background_gray);
         }
         downloadData(methodOfSort, page);
     }
