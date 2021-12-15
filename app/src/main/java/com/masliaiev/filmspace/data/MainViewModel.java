@@ -26,9 +26,7 @@ public class MainViewModel extends AndroidViewModel {
     public int exist (int movieId) {
         try {
             return new ExistMovieTask().execute(movieId).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return 0;

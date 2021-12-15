@@ -1,5 +1,6 @@
 package com.masliaiev.filmspace.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,36 +88,36 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageViewSmallPoster;
-        private ImageView imageViewFavouriteIndicator;
-        private TextView textViewTitleIfPosterDoNotExist;
+        private final ImageView imageViewSmallPoster;
+        private final ImageView imageViewFavouriteIndicator;
+        private final TextView textViewTitleIfPosterDoNotExist;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
             imageViewFavouriteIndicator = itemView.findViewById(R.id.imageViewFavouriteIndicator);
             textViewTitleIfPosterDoNotExist = itemView.findViewById(R.id.textViewTitleIfPosterDoNotExist);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onPosterClickListener != null) {
-                        onPosterClickListener.onPosterClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (onPosterClickListener != null) {
+                    onPosterClickListener.onPosterClick(getAdapterPosition());
                 }
             });
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void clear() {
         this.movies.clear();
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setFavouriteMovies(List<Movie> favouriteMovies) {
         this.favouriteMovies = favouriteMovies;
         notifyDataSetChanged();
@@ -126,19 +127,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
-    public List<Movie> getFavouriteMovies() {
-        return favouriteMovies;
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 
-    public void addFavouriteMovies(List<Movie> movies) {
-        this.favouriteMovies.addAll(movies);
-        notifyDataSetChanged();
-    }
 
 
 }

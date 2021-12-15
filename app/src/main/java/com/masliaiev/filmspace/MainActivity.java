@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -20,14 +19,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.adapters.MovieAdapter;
 import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
@@ -62,64 +59,58 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static boolean connection = false;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkConnection();
         if (!connection) {
-            Toast.makeText(this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
         swipeRefreshLayoutData = findViewById(R.id.swipeToRefreshData);
-        swipeRefreshLayoutData.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                checkConnection();
-                if (!connection) {
-                    Toast.makeText(MainActivity.this, "Данные не обновлены", Toast.LENGTH_SHORT).show();
-                } else {
-                    page = 1;
-                    isLoading = false;
-                    downloadData(methodOfSort, page);
-                    Toast.makeText(MainActivity.this, "Данные обновлены", Toast.LENGTH_SHORT).show();
-                }
-                swipeRefreshLayoutData.setRefreshing(false);
+        swipeRefreshLayoutData.setOnRefreshListener(() -> {
+            checkConnection();
+            if (!connection) {
+                Toast.makeText(MainActivity.this, R.string.data_not_updated, Toast.LENGTH_SHORT).show();
+            } else {
+                page = 1;
+                isLoading = false;
+                downloadData(methodOfSort, page);
+                Toast.makeText(MainActivity.this, R.string.data_updated, Toast.LENGTH_SHORT).show();
             }
+            swipeRefreshLayoutData.setRefreshing(false);
         });
         lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.mainActivity);
         bottomNavigationView.getMenu().findItem(R.id.mainActivity).setIcon(R.drawable.home_white);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.mainActivity:
-                        return true;
-                    case R.id.favouriteActivity:
-                        Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.randomActivity:
-                        Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
-                        startActivity(intentRandom);
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.searchActivity:
-                        Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
-                        startActivity(intentSearch);
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.mainActivity:
+                    return true;
+                case R.id.favouriteActivity:
+                    Intent intentFavourites = new Intent(MainActivity.this, FavouriteActivity.class);
+                    startActivity(intentFavourites);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.randomActivity:
+                    Intent intentRandom = new Intent(MainActivity.this, RandomActivity.class);
+                    startActivity(intentRandom);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.searchActivity:
+                    Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
+                    startActivity(intentSearch);
+                    overridePendingTransition(0,0);
+                    return true;
             }
+            return false;
         });
         viewModel = new  ViewModelProvider(this).get(MainViewModel.class);
         progressBarLoading = findViewById(R.id.progressBarLoading);
@@ -131,66 +122,48 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerViewPosters.setAdapter(movieAdapter);
         page = 1;
         setMethodOfSort(false);
-        textViewTopRated.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkConnection();
-                page = 1;
-                setMethodOfSort(true);
-                if (!connection) {
-                    Toast.makeText(MainActivity.this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
-                }
+        textViewTopRated.setOnClickListener(v -> {
+            checkConnection();
+            page = 1;
+            setMethodOfSort(true);
+            if (!connection) {
+                Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }
         });
-        textViewPopularity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkConnection();
-                page = 1;
-                setMethodOfSort(false);
-                if (!connection) {
-                    Toast.makeText(MainActivity.this, "Отсутствует Интернет соединение", Toast.LENGTH_SHORT).show();
-                }
+        textViewPopularity.setOnClickListener(v -> {
+            checkConnection();
+            page = 1;
+            setMethodOfSort(false);
+            if (!connection) {
+                Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             }
         });
 
-        movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
-            @Override
-            public void onPosterClick(int position) {
-                Movie movie = movieAdapter.getMovies().get(position);
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("main", "main");
-                intent.putExtra("id", movie.getId());
-                startActivity(intent);
-            }
+        movieAdapter.setOnPosterClickListener(position -> {
+            Movie movie = movieAdapter.getMovies().get(position);
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            intent.putExtra("main", "main");
+            intent.putExtra("id", movie.getId());
+            startActivity(intent);
         });
-        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
-            @Override
-            public void onReachEnd() {
-                if (!isLoading) {
-                    downloadData(methodOfSort, page);
-                }
+        movieAdapter.setOnReachEndListener(() -> {
+            if (!isLoading) {
+                downloadData(methodOfSort, page);
             }
         });
 
         LiveData<List<Movie>> moviesFromLiveData = viewModel.getMovies();
-        moviesFromLiveData.observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                if (page == 1) {
-                    movieAdapter.setMovies(movies);
-                }
+        moviesFromLiveData.observe(this, movies -> {
+            if (page == 1) {
+                movieAdapter.setMovies(movies);
             }
         });
 
         LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
-        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
-            @Override
-            public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                if (favouriteMovies != null) {
-                    List<Movie> movies = new ArrayList<>(favouriteMovies);
-                    movieAdapter.setFavouriteMovies(movies);
-                }
+        favouriteMovies.observe(this, favouriteMovies1 -> {
+            if (favouriteMovies1 != null) {
+                List<Movie> movies = new ArrayList<>(favouriteMovies1);
+                movieAdapter.setFavouriteMovies(movies);
             }
         });
 
@@ -229,12 +202,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this, args);
-        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
-            @Override
-            public void onStartLoading() {
-                progressBarLoading.setVisibility(View.VISIBLE);
-                isLoading = true;
-            }
+        jsonLoader.setOnStartLoadingListener(() -> {
+            progressBarLoading.setVisibility(View.VISIBLE);
+            isLoading = true;
         });
         return jsonLoader;
     }

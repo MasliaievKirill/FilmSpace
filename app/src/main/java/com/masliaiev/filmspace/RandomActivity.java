@@ -1,10 +1,8 @@
 package com.masliaiev.filmspace;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -16,13 +14,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.data.FavouriteMovie;
 import com.masliaiev.filmspace.data.MainViewModel;
 import com.masliaiev.filmspace.data.Movie;
@@ -48,6 +43,7 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
     private List<Movie> moviesForRandom;
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,31 +58,27 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
         textViewWarning = findViewById(R.id.textViewWarning);
         textViewWarning.setVisibility(View.INVISIBLE);
         bottomNavigationView.getMenu().findItem(R.id.randomActivity).setIcon(R.drawable.random_selection_white);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.mainActivity:
-                        Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
-                        startActivity(intentMainActivity);
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.favouriteActivity:
-                        Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.randomActivity:
-                        return true;
-                    case R.id.searchActivity:
-                        Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
-                        startActivity(intentSearch);
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.mainActivity:
+                    Intent intentMainActivity = new Intent(RandomActivity.this, MainActivity.class);
+                    startActivity(intentMainActivity);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.favouriteActivity:
+                    Intent intentFavourites = new Intent(RandomActivity.this, FavouriteActivity.class);
+                    startActivity(intentFavourites);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.randomActivity:
+                    return true;
+                case R.id.searchActivity:
+                    Intent intentSearch = new Intent(RandomActivity.this, SearchActivity.class);
+                    startActivity(intentSearch);
+                    overridePendingTransition(0,0);
+                    return true;
             }
+            return false;
         });
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         shakeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -96,14 +88,11 @@ public class RandomActivity extends AppCompatActivity implements SensorEventList
         moviesForRandom = new ArrayList<>();
 
         LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
-        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
-            @Override
-            public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                if (favouriteMovies != null) {
-                    List<Movie> movies = new ArrayList<>(favouriteMovies);
-                    moviesForRandom.clear();
-                    moviesForRandom.addAll(movies);
-                }
+        favouriteMovies.observe(this, favouriteMovies1 -> {
+            if (favouriteMovies1 != null) {
+                List<Movie> movies = new ArrayList<>(favouriteMovies1);
+                moviesForRandom.clear();
+                moviesForRandom.addAll(movies);
             }
         });
 

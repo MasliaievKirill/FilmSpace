@@ -9,8 +9,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -35,7 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.masliaiev.filmspace.adapters.MovieAdapter;
 import com.masliaiev.filmspace.adapters.PreviouslySearchedAdapter;
 import com.masliaiev.filmspace.data.FavouriteMovie;
@@ -78,6 +74,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     List<String> moviesPreviouslySearched;
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,31 +88,27 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.searchActivity);
         bottomNavigationView.getMenu().findItem(R.id.searchActivity).setIcon(R.drawable.search_white);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.mainActivity:
-                        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
-                        startActivity(intentHome);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.favouriteActivity:
-                        Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
-                        startActivity(intentFavourites);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.randomActivity:
-                        Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
-                        startActivity(intentRandom);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.searchActivity:
-                        return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.mainActivity:
+                    Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
+                    startActivity(intentHome);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.favouriteActivity:
+                    Intent intentFavourites = new Intent(SearchActivity.this, FavouriteActivity.class);
+                    startActivity(intentFavourites);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.randomActivity:
+                    Intent intentRandom = new Intent(SearchActivity.this, RandomActivity.class);
+                    startActivity(intentRandom);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.searchActivity:
+                    return true;
             }
+            return false;
         });
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferencesCount = PreferenceManager.getDefaultSharedPreferences(this);
@@ -124,22 +117,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
         textViewPreviouslySearched = findViewById(R.id.textViewPreviouslySearched);
         buttonSearch = findViewById(R.id.buttonSearch);
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                search();
-            }
-        });
+        buttonSearch.setOnClickListener(v -> search());
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         editTextSearchQuery = findViewById(R.id.editTextTextSearchQuery);
-        editTextSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search();
-                }
-                return false;
+        editTextSearchQuery.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                search();
             }
+            return false;
         });
         imageViewDeleteQuery = findViewById(R.id.imageViewDeleteQuery);
         editTextSearchQuery.addTextChangedListener(new TextWatcher() {
@@ -171,16 +156,13 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        imageViewDeleteQuery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTextSearchQuery.getText().clear();
-                getTitlesFromPreferences();
-                imageViewDeleteQuery.setVisibility(View.INVISIBLE);
-                recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
-                textViewPreviouslySearched.setVisibility(View.VISIBLE);
-                recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
-            }
+        imageViewDeleteQuery.setOnClickListener(v -> {
+            editTextSearchQuery.getText().clear();
+            getTitlesFromPreferences();
+            imageViewDeleteQuery.setVisibility(View.INVISIBLE);
+            recyclerViewSearchedMovies.setVisibility(View.INVISIBLE);
+            textViewPreviouslySearched.setVisibility(View.VISIBLE);
+            recyclerViewPreviouslySearched.setVisibility(View.VISIBLE);
         });
         recyclerViewSearchedMovies = findViewById(R.id.recyclerViewSearchedMovies);
         recyclerViewSearchedMovies.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
@@ -193,91 +175,77 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         recyclerViewPreviouslySearched.setAdapter(previouslySearchedAdapter);
         getTitlesFromPreferences();
 
-        previouslySearchedAdapter.setOnTitleClickListener(new PreviouslySearchedAdapter.OnTitleClickListener() {
-            @Override
-            public void onTitleClick(int position) {
-                String title = previouslySearchedAdapter.getMoviesTitles().get(position);
-                if (title != null) {
-                    editTextSearchQuery.setText(title);
-                    search();
-                }
+        previouslySearchedAdapter.setOnTitleClickListener(position -> {
+            String title = previouslySearchedAdapter.getMoviesTitles().get(position);
+            if (title != null) {
+                editTextSearchQuery.setText(title);
+                search();
             }
         });
 
 
         loaderManager = LoaderManager.getInstance(this);
         recyclerViewSearchedMovies.setAdapter(movieAdapter);
-        movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
-            @Override
-            public void onPosterClick(int position) {
-                Movie movie = movieAdapter.getMovies().get(position);
-                if (movie != null) {
-                    if (!preferences.getString("movie1", "null").equals(movie.getTitle()) && !preferences.getString("movie2", "null").equals(movie.getTitle())
-                            && !preferences.getString("movie3", "null").equals(movie.getTitle()) && !preferences.getString("movie4", "null").equals(movie.getTitle())
-                            && !preferences.getString("movie5", "null").equals(movie.getTitle()) && !preferences.getString("movie6", "null").equals(movie.getTitle())) {
-                        switch (preferencesCount.getInt("count", 0)) {
-                            case 1:
-                                preferences.edit().putString("movie1", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 2).apply();
-                                break;
-                            case 2:
-                                preferences.edit().putString("movie2", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 3).apply();
-                                break;
-                            case 3:
-                                preferences.edit().putString("movie3", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 4).apply();
-                                break;
-                            case 4:
-                                preferences.edit().putString("movie4", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 5).apply();
-                                break;
-                            case 5:
-                                preferences.edit().putString("movie5", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 6).apply();
-                                break;
-                            case 6:
-                                preferences.edit().putString("movie6", movie.getTitle()).apply();
-                                preferencesCount.edit().putInt("count", 1).apply();
-                                break;
-                        }
+        movieAdapter.setOnPosterClickListener(position -> {
+            Movie movie = movieAdapter.getMovies().get(position);
+            if (movie != null) {
+                if (!preferences.getString("movie1", "null").equals(movie.getTitle()) && !preferences.getString("movie2", "null").equals(movie.getTitle())
+                        && !preferences.getString("movie3", "null").equals(movie.getTitle()) && !preferences.getString("movie4", "null").equals(movie.getTitle())
+                        && !preferences.getString("movie5", "null").equals(movie.getTitle()) && !preferences.getString("movie6", "null").equals(movie.getTitle())) {
+                    switch (preferencesCount.getInt("count", 0)) {
+                        case 1:
+                            preferences.edit().putString("movie1", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 2).apply();
+                            break;
+                        case 2:
+                            preferences.edit().putString("movie2", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 3).apply();
+                            break;
+                        case 3:
+                            preferences.edit().putString("movie3", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 4).apply();
+                            break;
+                        case 4:
+                            preferences.edit().putString("movie4", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 5).apply();
+                            break;
+                        case 5:
+                            preferences.edit().putString("movie5", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 6).apply();
+                            break;
+                        case 6:
+                            preferences.edit().putString("movie6", movie.getTitle()).apply();
+                            preferencesCount.edit().putInt("count", 1).apply();
+                            break;
                     }
-
-                    Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
-                    intent.putExtra("search", "search");
-                    intent.putExtra("id", movie.getId());
-                    intent.putExtra("voteCount", movie.getVoteCount());
-                    intent.putExtra("title", movie.getTitle());
-                    intent.putExtra("originalTitle", movie.getOriginalTitle());
-                    intent.putExtra("overview", movie.getOverview());
-                    intent.putExtra("posterPath", movie.getPosterPath());
-                    intent.putExtra("bigPosterPath", movie.getBigPosterPath());
-                    intent.putExtra("backdropPath", movie.getBackdropPath());
-                    intent.putExtra("voteAverage", movie.getVoteAverage());
-                    intent.putExtra("releaseDate", movie.getReleaseDate());
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(SearchActivity.this, "error 2", Toast.LENGTH_SHORT).show();
                 }
+
+                Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
+                intent.putExtra("search", "search");
+                intent.putExtra("id", movie.getId());
+                intent.putExtra("voteCount", movie.getVoteCount());
+                intent.putExtra("title", movie.getTitle());
+                intent.putExtra("originalTitle", movie.getOriginalTitle());
+                intent.putExtra("overview", movie.getOverview());
+                intent.putExtra("posterPath", movie.getPosterPath());
+                intent.putExtra("bigPosterPath", movie.getBigPosterPath());
+                intent.putExtra("backdropPath", movie.getBackdropPath());
+                intent.putExtra("voteAverage", movie.getVoteAverage());
+                intent.putExtra("releaseDate", movie.getReleaseDate());
+                startActivity(intent);
             }
         });
-        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
-            @Override
-            public void onReachEnd() {
-                if (!isLoading) {
-                    downloadData(query, lang, page);
-                }
+        movieAdapter.setOnReachEndListener(() -> {
+            if (!isLoading) {
+                downloadData(query, lang, page);
             }
         });
 
         LiveData<List<FavouriteMovie>> favouriteMovies = viewModel.getFavouriteMovies();
-        favouriteMovies.observe(this, new Observer<List<FavouriteMovie>>() {
-            @Override
-            public void onChanged(List<FavouriteMovie> favouriteMovies) {
-                if (favouriteMovies != null) {
-                    List<Movie> movies = new ArrayList<>(favouriteMovies);
-                    movieAdapter.setFavouriteMovies(movies);
-                }
+        favouriteMovies.observe(this, favouriteMovies1 -> {
+            if (favouriteMovies1 != null) {
+                List<Movie> movies = new ArrayList<>(favouriteMovies1);
+                movieAdapter.setFavouriteMovies(movies);
             }
         });
         if (savedInstanceState != null) {
@@ -296,12 +264,9 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this, args);
-        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
-            @Override
-            public void onStartLoading() {
-                progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
-                isLoading = true;
-            }
+        jsonLoader.setOnStartLoadingListener(() -> {
+            progressBarLoadingSearchedMovies.setVisibility(View.VISIBLE);
+            isLoading = true;
         });
         return jsonLoader;
     }
@@ -317,7 +282,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
             page++;
         } else {
-            Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.nothing_found, Toast.LENGTH_SHORT).show();
         }
         progressBarLoadingSearchedMovies.setVisibility(View.INVISIBLE);
         isLoading = false;
@@ -360,7 +325,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             movieAdapter.clear();
             downloadData(query, lang, page);
         } else {
-            Toast.makeText(SearchActivity.this, "Введите название фильма, или часть названия для поиска ", Toast.LENGTH_LONG).show();
+            Toast.makeText(SearchActivity.this, R.string.search_warning, Toast.LENGTH_LONG).show();
         }
     }
 

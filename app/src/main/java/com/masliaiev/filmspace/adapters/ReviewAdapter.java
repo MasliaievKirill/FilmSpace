@@ -1,5 +1,6 @@
 package com.masliaiev.filmspace.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +38,16 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         return reviews.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setReviews(ArrayList<Review> reviews) {
         this.reviews = reviews;
         notifyDataSetChanged();
     }
 
-    public class ReviewViewHolder extends RecyclerView.ViewHolder {
+    class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewAuthor;
-        private TextView textViewContent;
+        private final TextView textViewAuthor;
+        private final TextView textViewContent;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);

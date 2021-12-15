@@ -1,5 +1,6 @@
 package com.masliaiev.filmspace.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,22 +44,20 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     class TrailerViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewNameOfVideo;
+        private final TextView textViewNameOfVideo;
 
         public TrailerViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewNameOfVideo = itemView.findViewById(R.id.textViewNameOfVideo);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onTrailerClickListener != null) {
-                        onTrailerClickListener.onTrailerClick(trailers.get(getAdapterPosition()).getKey());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (onTrailerClickListener != null) {
+                    onTrailerClickListener.onTrailerClick(trailers.get(getAdapterPosition()).getKey());
                 }
             });
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setTrailers(ArrayList<Trailer> trailers) {
         this.trailers = trailers;
         notifyDataSetChanged();

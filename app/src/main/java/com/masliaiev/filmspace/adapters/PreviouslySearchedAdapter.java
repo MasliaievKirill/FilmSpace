@@ -1,5 +1,6 @@
 package com.masliaiev.filmspace.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masliaiev.filmspace.R;
-import com.masliaiev.filmspace.data.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,22 +53,20 @@ public class PreviouslySearchedAdapter extends RecyclerView.Adapter <PreviouslyS
 
     class PreviouslySearchedViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewPreviouslySearchedTitle;
+        private final TextView textViewPreviouslySearchedTitle;
 
         public PreviouslySearchedViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewPreviouslySearchedTitle = itemView.findViewById(R.id.textViewPreviouslySearchedTitle);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onTitleClickListener != null) {
-                        onTitleClickListener.onTitleClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (onTitleClickListener != null) {
+                    onTitleClickListener.onTitleClick(getAdapterPosition());
                 }
             });
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMoviesTitles(List<String> moviesTitles) {
         this.moviesTitles = moviesTitles;
         notifyDataSetChanged();
@@ -78,8 +76,4 @@ public class PreviouslySearchedAdapter extends RecyclerView.Adapter <PreviouslyS
         return moviesTitles;
     }
 
-    public void addMoviesTitles (List<String> moviesTitles) {
-        this.moviesTitles.addAll(moviesTitles);
-        notifyDataSetChanged();
-    }
 }

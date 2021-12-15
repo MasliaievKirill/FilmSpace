@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -38,10 +38,10 @@ public class DetailActivity extends AppCompatActivity {
     private int id;
     private Movie movie;
     private FavouriteMovie favouriteMovie;
-    private boolean fromSearchActivity = false;
 
     private MainViewModel viewModel;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +52,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         String lang = Locale.getDefault().getLanguage();
         ImageView imageViewButtonToBack = findViewById(R.id.imageViewButtonToBack);
-        imageViewButtonToBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        imageViewButtonToBack.setOnClickListener(v -> finish());
         ScrollView scrollViewDetail = findViewById(R.id.scrollViewDetail);
         TextView textViewTopTitle = findViewById(R.id.textViewTopTitle);
         ImageView imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
@@ -93,21 +88,15 @@ public class DetailActivity extends AppCompatActivity {
             finish();
         }
         imageViewAddToFavourite = findViewById(R.id.imageViewAddToFavourite);
-        imageViewAddToFavourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (favouriteMovie == null) {
-                    viewModel.insertFavouriteMovie(new FavouriteMovie(movie));
-                    Toast.makeText(DetailActivity.this, R.string.add_to_favourite, Toast.LENGTH_SHORT).show();
-                } else {
-                    viewModel.deleteFavouriteMovie(favouriteMovie);
-                    Toast.makeText(DetailActivity.this, R.string.delete_from_favourite, Toast.LENGTH_SHORT).show();
-                    if (fromSearchActivity) {
-                        favouriteMovie = null;
-                    }
-                }
-                setFavourite();
+        imageViewAddToFavourite.setOnClickListener(v -> {
+            if (favouriteMovie == null) {
+                viewModel.insertFavouriteMovie(new FavouriteMovie(movie));
+                Toast.makeText(DetailActivity.this, R.string.add_to_favourite, Toast.LENGTH_SHORT).show();
+            } else {
+                viewModel.deleteFavouriteMovie(favouriteMovie);
+                Toast.makeText(DetailActivity.this, R.string.delete_from_favourite, Toast.LENGTH_SHORT).show();
             }
+            setFavourite();
         });
         Picasso.get().load(movie.getBigPosterPath()).placeholder(R.drawable.placeholder_large).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
@@ -120,12 +109,9 @@ public class DetailActivity extends AppCompatActivity {
         RecyclerView recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
         RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
         TrailerAdapter trailerAdapter = new TrailerAdapter();
-        trailerAdapter.setOnTrailerClickListener(new TrailerAdapter.OnTrailerClickListener() {
-            @Override
-            public void onTrailerClick(String url) {
-                Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intentToTrailer);
-            }
+        trailerAdapter.setOnTrailerClickListener(url -> {
+            Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intentToTrailer);
         });
         ReviewAdapter reviewAdapter = new ReviewAdapter();
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
